@@ -1,9 +1,7 @@
 package softuni.meal_plan.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "recipes")
@@ -12,6 +10,7 @@ public class Recipe extends BaseEntity {
     private String instructions;
     private int portionsCount;
     private User author;
+    private List<Ingredient> ingredients;
 
     public Recipe() {
     }
@@ -24,6 +23,7 @@ public class Recipe extends BaseEntity {
     public void setName(String name) {
         this.name = name;
     }
+
     @Column(name = "instructions", nullable = false)
     public String getInstructions() {
         return instructions;
@@ -32,6 +32,7 @@ public class Recipe extends BaseEntity {
     public void setInstructions(String instructions) {
         this.instructions = instructions;
     }
+
     @Column(name = "portions_count", nullable = false)
     public int getPortionsCount() {
         return portionsCount;
@@ -48,5 +49,26 @@ public class Recipe extends BaseEntity {
 
     public void setAuthor(User author) {
         this.author = author;
+    }
+
+
+    @ManyToMany(targetEntity = Ingredient.class, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "recipe_ingredients",
+            joinColumns = @JoinColumn(
+                    name = "recipe_id",
+                    referencedColumnName = "id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "ingredient_id",
+                    referencedColumnName = "id"
+            )
+    )
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
     }
 }

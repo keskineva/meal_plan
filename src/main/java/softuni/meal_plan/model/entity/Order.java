@@ -15,6 +15,8 @@ public class Order extends BaseEntity {
     private Date deliveryDate;
     private BigDecimal price;
     private User user;
+    private Supplier supplier;
+
 
     public Order() {
     }
@@ -51,7 +53,17 @@ public class Order extends BaseEntity {
         return user;
     }
 
+
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @ManyToOne
+    public Supplier getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
     }
 }
