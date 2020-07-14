@@ -17,8 +17,10 @@
                 <thead>
                 <tr class="row mx-auto">
                     <th class="col-md-1 text-center">#</th>
+                    <th class="col-md-3 text-center">Nameame</th>
                     <th class="col-md-3 text-center">Username</th>
                     <th class="col-md-2 text-center">Email</th>
+                    <th class="col-md-2 text-center">Address</th>
                     <th class="col-md-2 text-center">Roles</th>
                 </tr>
                 </thead>
@@ -26,8 +28,10 @@
                 <th:block th:each="users, iter : ${users}">
                     <tr class="row mx-auto">
                         <th class="col-md-1 text-center" th:utext="${iter.index + 1}"></th>
+                        <td class="col-md-3 text-center" th:utext="${users.name}"></td>
                         <td class="col-md-3 text-center" th:utext="${users.username}"></td>
                         <td class="col-md-2 text-center" th:utext="${users.email}"></td>
+                        <td class="col-md-2 text-center" th:utext="${users.address}"></td>
                         <th:block th:each="authorities : ${users.authorities}">
                             <td class="col-md-2 text-center"
                                 th:utext="${authorities.authority}">
