@@ -1,11 +1,11 @@
-package softuni.meal_plan.model.entity;
+package softuni.meal_plan.model.service;
 
-import javax.persistence.*;
+import softuni.meal_plan.model.entity.Ingredient;
+import softuni.meal_plan.model.entity.User;
+
 import java.util.List;
 
-@Entity
-@Table(name = "recipes")
-public class Recipe extends BaseEntity {
+public class RecipeServiceModel extends BaseServiceModel {
     private String name;
     private byte[] image;
     private String instructions;
@@ -13,10 +13,6 @@ public class Recipe extends BaseEntity {
     private User author;
     private List<Ingredient> ingredients;
 
-    public Recipe() {
-    }
-
-    @Column(name = "name", nullable = false)
     public String getName() {
         return name;
     }
@@ -25,7 +21,6 @@ public class Recipe extends BaseEntity {
         this.name = name;
     }
 
-    @Column(name = "image", nullable = false)
     public byte[] getImage() {
         return image;
     }
@@ -34,7 +29,6 @@ public class Recipe extends BaseEntity {
         this.image = image;
     }
 
-    @Column(name = "instructions", nullable = false, columnDefinition="TEXT")
     public String getInstructions() {
         return instructions;
     }
@@ -43,7 +37,6 @@ public class Recipe extends BaseEntity {
         this.instructions = instructions;
     }
 
-    @Column(name = "portions_count", nullable = false)
     public int getPortionsCount() {
         return portionsCount;
     }
@@ -52,7 +45,6 @@ public class Recipe extends BaseEntity {
         this.portionsCount = portionsCount;
     }
 
-    @ManyToOne
     public User getAuthor() {
         return author;
     }
@@ -61,19 +53,6 @@ public class Recipe extends BaseEntity {
         this.author = author;
     }
 
-
-    @ManyToMany(targetEntity = Ingredient.class, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "recipe_ingredients",
-            joinColumns = @JoinColumn(
-                    name = "recipe_id",
-                    referencedColumnName = "id"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "ingredient_id",
-                    referencedColumnName = "id"
-            )
-    )
     public List<Ingredient> getIngredients() {
         return ingredients;
     }
