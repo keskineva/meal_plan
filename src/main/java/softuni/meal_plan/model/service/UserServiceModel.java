@@ -9,11 +9,30 @@ public class UserServiceModel extends BaseServiceModel {
     private String password;
 
     private String email;
+
     private String address;
+
+
     private Set<RoleServiceModel> authorities;
 
 
     public UserServiceModel() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getUsername() {
@@ -46,21 +65,5 @@ public class UserServiceModel extends BaseServiceModel {
 
     public void setAuthorities(Set<RoleServiceModel> authorities) {
         this.authorities = authorities;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 }

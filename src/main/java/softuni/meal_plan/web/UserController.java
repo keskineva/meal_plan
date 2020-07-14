@@ -6,24 +6,28 @@ import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import softuni.meal_plan.model.binding.UserLoginBindingModel;
+import softuni.meal_plan.model.binding.UserEditBindingModel;
 import softuni.meal_plan.model.binding.UserRegisterBindingModel;
+import softuni.meal_plan.model.service.RoleServiceModel;
 import softuni.meal_plan.model.service.UserServiceModel;
+import softuni.meal_plan.model.view.UserProfileViewModel;
 import softuni.meal_plan.service.UserService;
 import softuni.meal_plan.web.annotations.PageTitle;
 
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 
 @Controller
 @RequestMapping("/users")
-public class UserController extends BaseController{
+public class UserController extends BaseController {
 
     private final UserService userService;
     private final ModelMapper modelMapper;
@@ -40,59 +44,29 @@ public class UserController extends BaseController{
     @PreAuthorize("isAnonymous()")
     @PageTitle("Register")
     public ModelAndView register() {
-        return super.view("users/register");
+        return super.view("user/register");
     }
 
     @PostMapping("/register")
     @PreAuthorize("isAnonymous()")
     public ModelAndView registerConfirm(@ModelAttribute UserRegisterBindingModel model) {
         if (!model.getPassword().equals(model.getConfirmPassword())) {
-            return super.view("users/register");
+            return super.view("user/register");
         }
 
         this.userService.registerUser(this.modelMapper.map(model, UserServiceModel.class));
 
-        return super.redirect("users/login");
+        return super.redirect("/login");
     }
 
     @GetMapping("/login")
     @PreAuthorize("isAnonymous()")
     @PageTitle("Login")
     public ModelAndView login() {
-        return super.view("users/login");
+        return super.view("user/login");
     }
 
-    @PostMapping("/login")
-    @PreAuthorize("isAnonymous()")
-    public ModelAndView loginConfirm(@Valid @ModelAttribute("userLoginBindingModel") UserLoginBindingModel userLoginBindingModel,
-                                     BindingResult bindingResult, RedirectAttributes redirectAttributes,
-                                     HttpSession httpSession) {
-        if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userLoginBindingModel"
-                    , bindingResult);
-
-            for (ObjectError error:bindingResult.getAllErrors()) {
-                System.err.println(error);
-
-            }
-            return super.redirect("users/login");
-        }
-        //find user
-        UserServiceModel user = this.userService.findByUsername(userLoginBindingModel.getUsername());
-
-        if (user == null || !user.getPassword().equals(userLoginBindingModel.getPassword())) {
-            redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
-            redirectAttributes.addFlashAttribute("notFound", true);
-            return super.redirect("users/login");
-        }
-
-        httpSession.setAttribute("user", user);
-        System.out.println(httpSession.getValueNames());
-        return super.redirect("/");
-
-    }
-    /*@GetMapping("/profile")
+    @GetMapping("/profile")
     @PreAuthorize("isAuthenticated()")
     @PageTitle("Profile")
     public ModelAndView profile(Principal principal, ModelAndView modelAndView){
@@ -175,14 +149,6 @@ public class UserController extends BaseController{
         this.userService.makeUser(id);
 
         return super.redirect("/users/all");
-    }
-*/
-    @GetMapping("/logout")
-    public ModelAndView logout(HttpSession httpSession) {
-        System.out.println(httpSession.getValueNames());
-        httpSession.invalidate();
-        System.out.println(httpSession.getValueNames());
-        return super.redirect("/");
     }
 
     @InitBinder

@@ -1,4 +1,4 @@
-package softuni.meal_plan.service;
+package softuni.meal_plan.service.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import softuni.meal_plan.model.entity.Role;
 import softuni.meal_plan.model.service.RoleServiceModel;
 import softuni.meal_plan.repository.RoleRepository;
+import softuni.meal_plan.service.RoleService;
 
 import java.util.Set;
 import java.util.stream.Collectors;

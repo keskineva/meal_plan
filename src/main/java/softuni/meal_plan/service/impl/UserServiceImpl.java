@@ -1,4 +1,4 @@
-package softuni.meal_plan.service;
+package softuni.meal_plan.service.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,8 @@ import softuni.meal_plan.error.UserNotFoundException;
 import softuni.meal_plan.model.entity.User;
 import softuni.meal_plan.model.service.UserServiceModel;
 import softuni.meal_plan.repository.UserRepository;
+import softuni.meal_plan.service.RoleService;
+import softuni.meal_plan.service.UserService;
 
 import java.util.LinkedHashSet;
 import java.util.List;

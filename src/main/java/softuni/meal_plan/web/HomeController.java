@@ -1,19 +1,26 @@
 package softuni.meal_plan.web;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
+import softuni.meal_plan.web.annotations.PageTitle;
 
-@RestController
-public class HomeController {
+@Controller
+public class HomeController extends BaseController {
 
-    @RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST} )
-    public ModelAndView index(){
+    @GetMapping("/")
+    @PreAuthorize("permitAll()")
+    @PageTitle("Index")
+    public ModelAndView index() {
+        return super.view("index");
+    }
 
-        ModelAndView modelAndView = new ModelAndView("index");
-
-        return modelAndView;
+    @GetMapping("/home")
+    @PreAuthorize("isAuthenticated()")
+    @PageTitle("Home")
+    public ModelAndView home() {
+        return super.view("home");
     }
 
 }
