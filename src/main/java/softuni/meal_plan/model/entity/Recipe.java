@@ -25,7 +25,7 @@ public class Recipe extends BaseEntity {
         this.name = name;
     }
 
-    @Column(name = "image", nullable = false)
+    @Column(name = "image")
     public byte[] getImage() {
         return image;
     }

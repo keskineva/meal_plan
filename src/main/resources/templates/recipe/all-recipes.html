@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:include="~{fragments/head}"></th:block>
 </head>
@@ -7,6 +7,7 @@
 <div class="container-fluid">
     <header>
         <th:block th:include="~{fragments/nav-bar}"></th:block>
+        <link rel="stylesheet" th:href="@{/css/recipe.css}">
     </header>
     <main class="mt-5">
         <div class="bg-image-quote-all">
@@ -28,6 +29,25 @@
                         <td class="col-md-3 text-center" th:utext="${recipes.image}"></td>
                         <td class="col-md-3 text-center" th:utext="${recipes.name}"></td>
                     </tr>
+                </th:block>
+                <th:block>
+                   <!-- <div class="each_recipe" ng-if="::!recipe.ad">
+                        <div class="recipe"><a
+                                ng-href="https://www.supercook.com/dyn/recipe/2ee61f8638dc8180a91d72c460358269"
+                                target="_blank" ng-click="ga(recipe,$event)"
+                                href="https://www.supercook.com/dyn/recipe/2ee61f8638dc8180a91d72c460358269">
+                            <img
+                                style="width: 300px;height: 250px"
+                                ng-src="https://s3.amazonaws.com/supercook-thumbs/5d45f8678b3737268083476a.jpg"
+                                src="https://s3.amazonaws.com/supercook-thumbs/5d45f8678b3737268083476a.jpg"> </a>
+                            <div class="recipe-info"><a
+                                   th:href="@{recipe/{id}}"
+                                    target="_blank" &lt;!&ndash;th:onclick="@{recipe/{id}}"&ndash;&gt;
+                                <div class="recipe-title" th:utext="${recipes.name}"></div>
+                            </a>
+                            </div>
+                        </div>
+                    </div>-->
                 </th:block>
                 </tbody>
             </table>
