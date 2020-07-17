@@ -34,30 +34,41 @@
                            type="text" class="form-control" id="portionsCount" placeholder="Portions..."
                            name="portionsCount">
                 </div>
-                <th:block>
+
+
+                <div class="set-form">
+                    <table id="IngredientsTable" class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Row count</th>
+                            <th>Ingredient</th>
+                            <th>Amount</th>
+                            <th><button type="submit" name="addRow">Add row</button></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="row,rowStat : *{ingredientsList}">
+                            <td th:text="${rowStat.count}">1</td>
+                            <td>
+                                <input type="text" th:field="*{ingredientsList[__${rowStat.index}__].ingredient}"
+                                       th:errorclass="fieldError"/>
+                            </td>
+                            <td>
+                                <input type="text" th:field="*{ingredientsList[__${rowStat.index}__].amount}"
+                                       th:errorclass="fieldError"/>
+                            </td>
+                            <td>
+                                <button type="submit" name="removeRow" th:value="${rowStat.index}">Remove row</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                     <div class="set-form">
-                        <table id="myTable" class="table table-bordered">
-                            <tr>
-                                <th>Ingredient</th>
-                                <th>Amount</th>
-                            </tr>
-                            <tr>
-                                <td>
-                                        <textarea name="Ingredient" placeholder="Ingredient"
-                                                  id="ingredient" style="resize: none; width: 100%;"></textarea>
-                                </td>
-                                <td>
-                                        <textarea name="Amount" placeholder="Amount" id="amount"
-                                                  style="resize: none; width: 100%;"></textarea>
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="set-form">
-                            <input type="button" id="more_fields" onclick="add_fields();" value="Add More"
-                                   class="btn btn-info"/>
-                        </div>
+                        <input type="button" id="more_fields" onclick="add_fields();" value="Add More"
+                               class="btn btn-info"/>
                     </div>
-                </th:block>
+                </div>
+
                 <hr class="bg-hero hr-2"/>
                 <div class="button-holder mt-3 d-flex justify-content-center">
                     <button type="submit" class="btn bg-hero glow-button">Add</button>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="~{fragments/head}"></th:block>
+</head>
+<body>
+<header>
+    <th:block th:include="~{fragments/nav-bar}"></th:block>
+    <script src="/js/addIngredients.js"></script>
+</header>
+<main class="mt-5">
+    <div class="recipesList" th:unless="${#lists.isEmpty(allRecipes)}">
+
+        <h2 th:text="#{title.list}">Add Recipe</h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th th:text="#{recipeAddBindingModel.name}">Recipe Name</th>
+                <th th:text="#{recipeAddBindingModel.instructions}">Instructions</th>
+                <th th:text="#{recipeAddBindingModel.portionsCount}">Portions</th>
+                <th th:text="#{recipeAddBindingModel.ingredients}">Ingredients</th>
+                <th th:text="#{recipeAddBindingModel.amounts}">Ingredients Amounts</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="sb : ${allRecipes}">
+                <td th:text="${{sb.name}}">Name</td>
+                <td th:text="${sb.instructions}">Instructions</td>
+                <td th:text="#{${sb.portionsCount}}">Portions</td>
+               <!-- <td th:text="${#strings.arrayJoin(
+                           #messages.arrayMsg(
+                               #strings.arrayPrepend(sb.ingredients,'recipeAddBindingModel.ingredients.')),
+                           ', ')}">Vegan, MeatEating
+                </td>-->
+                <td>
+                    <table>
+                        <tbody>
+                        <tr th:each="row,rowStat : ${sb.ingredients}">
+                            <td th:text="${rowStat.count}">1</td>
+                            <td th:text="${row.ingredient.name}">Thymus Thymi</td>
+                            <td th:text="${row.amount}">12</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<footer>
+    <th:block th:include="~{fragments/footer}"></th:block>
+</footer>
+</div>
+</body>
+</html>
