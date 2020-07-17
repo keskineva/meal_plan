@@ -27,8 +27,8 @@
                 <td class="col-md-3 text-center" th:utext="${recipes.image}"></td>
                 <td class="col-md-3 text-center" th:utext="${recipes.name}"></td>
                 <td class="button-holder mt-3 d-flex justify-content-center">
-                    <form>
-                        <input hidden th:id="6a72dbc4-9215-478c-ad7a-7ac8c8309fc2" type="text" name="recipeId">
+                    <form class="addToPlanForm" method="post">
+                        <input hidden value="6a72dbc4-9215-478c-ad7a-7ac8c8309fc2" type="text" name="recipe_id">
                         <div>
                             <label>Meal Type</label>
                             <select class="browser-default custom-select" id="meal_type" name="meal_type">
@@ -39,7 +39,7 @@
                             </select>
                         </div>
                         <label>Portions:</label>
-                        <input type="number" class="form-control" name="portions">
+                        <input type="number" class="form-control" name="portions_count">
 
                         <div class="input-group date" data-provide="datepicker">
                             <label>Day:</label>

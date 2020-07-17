@@ -6,16 +6,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import softuni.meal_plan.model.binding.RecipeAddBindingModel;
 import softuni.meal_plan.model.service.IngredientServiceModel;
 import softuni.meal_plan.model.service.RecipeServiceModel;
 import softuni.meal_plan.service.IngredientService;
+import softuni.meal_plan.service.PlannedMealService;
 import softuni.meal_plan.service.RecipeService;
 import softuni.meal_plan.web.annotations.PageTitle;
 
@@ -32,23 +30,25 @@ public class RecipeController extends BaseController {
     private final ModelMapper modelMapper;
     private final RecipeService recipeService;
     private final IngredientService ingredientService;
+    private final PlannedMealService plannedMealService;
 
     @Autowired
-    public RecipeController(ModelMapper modelMapper, RecipeService recipeService, IngredientService ingredientService) {
+    public RecipeController(ModelMapper modelMapper, RecipeService recipeService, IngredientService ingredientService, PlannedMealService plannedMealService) {
         this.modelMapper = modelMapper;
         this.recipeService = recipeService;
         this.ingredientService = ingredientService;
+        this.plannedMealService = plannedMealService;
     }
 
-    @ModelAttribute("allRecipes")
-    public List<RecipeServiceModel> populateRecipes() {
-        List<RecipeServiceModel> recipes = this.recipeService.findAllRecipes()
-                .stream()
-                .map(r -> this.modelMapper.map(r, RecipeServiceModel.class))
-                .collect(Collectors.toList());
-        return recipes;
-    }
-
+    /*  @ModelAttribute("allRecipes")
+      public List<RecipeServiceModel> populateRecipes() {
+          List<RecipeServiceModel> recipes = this.recipeService.findAllRecipes()
+                  .stream()
+                  .map(r -> this.modelMapper.map(r, RecipeServiceModel.class))
+                  .collect(Collectors.toList());
+          return recipes;
+      }
+  */
     @GetMapping("/all")
     @PageTitle("All recipes")
     public ModelAndView showAllRecipes(ModelAndView modelAndView) {
@@ -120,5 +120,16 @@ public class RecipeController extends BaseController {
         return super.view("recipe/add-recipe", modelAndView);
     }
 
+    @PostMapping(value = "/all", params = {"addToPlan"})
+    @PreAuthorize("isAuthenticated()")
+    public String addToPlan(@RequestParam("portions_count") Integer portionsCount,
+                            @RequestParam("recipe_id") String recipeId,
+                            @RequestParam("planned_date")String date,
+                            @RequestParam("meal_type") String mealType) {
 
+
+        System.out.printf("%s %s %s %s",portionsCount, recipeId, date, mealType);
+
+        return "ok";
+    }
 }
