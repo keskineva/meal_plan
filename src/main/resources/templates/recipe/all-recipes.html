@@ -10,54 +10,56 @@
         <link rel="stylesheet" th:href="@{/css/recipe.css}">
     </header>
     <main class="mt-5">
-        <div class="bg-image-quote-all">
-            <span style="visibility: hidden">....</span>
-            <h1 class="text-center bold font-weight-bold text-dark">All recipes</h1>
-            <hr class="hr-2 bg-dark">
-            <table class="table table-hover w-75 mx-auto">
-                <thead>
-                <tr class="row mx-auto">
-                    <th class="col-md-1 text-center">#</th>
-                    <th class="col-md-3 text-center">Recipe Image</th>
-                    <th class="col-md-3 text-center">Recipe Name</th>
-                </tr>
-                </thead>
-                <tbody>
-                <th:block th:each="recipes, iter : ${recipes}">
-                    <tr class="row mx-auto">
-                        <th class="col-md-1 text-center" th:utext="${iter.index + 1}"></th>
-                        <td class="col-md-3 text-center" th:utext="${recipes.image}"></td>
-                        <td class="col-md-3 text-center" th:utext="${recipes.name}"></td>
-                    </tr>
-                </th:block>
-                <th:block>
-                   <!-- <div class="each_recipe" ng-if="::!recipe.ad">
-                        <div class="recipe"><a
-                                ng-href="https://www.supercook.com/dyn/recipe/2ee61f8638dc8180a91d72c460358269"
-                                target="_blank" ng-click="ga(recipe,$event)"
-                                href="https://www.supercook.com/dyn/recipe/2ee61f8638dc8180a91d72c460358269">
-                            <img
-                                style="width: 300px;height: 250px"
-                                ng-src="https://s3.amazonaws.com/supercook-thumbs/5d45f8678b3737268083476a.jpg"
-                                src="https://s3.amazonaws.com/supercook-thumbs/5d45f8678b3737268083476a.jpg"> </a>
-                            <div class="recipe-info"><a
-                                   th:href="@{recipe/{id}}"
-                                    target="_blank" &lt;!&ndash;th:onclick="@{recipe/{id}}"&ndash;&gt;
-                                <div class="recipe-title" th:utext="${recipes.name}"></div>
-                            </a>
+        <span style="visibility: hidden">....</span>
+        <h1 class="text-center bold font-weight-bold text-dark">All recipes</h1>
+        <hr class="hr-2 bg-dark">
+        <table class="table table-hover w-75 mx-auto">
+            <thead>
+            <tr class="row mx-auto">
+                <th class="col-md-1 text-center">#</th>
+                <th class="col-md-3 text-center">Recipe Image</th>
+                <th class="col-md-3 text-center">Recipe Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="row mx-auto" th:each="recipes, iter : *{recipes}">
+                <td class="col-md-1 text-center" th:utext="${iter.index + 1}"></td>
+                <td class="col-md-3 text-center" th:utext="${recipes.image}"></td>
+                <td class="col-md-3 text-center" th:utext="${recipes.name}"></td>
+                <td class="button-holder mt-3 d-flex justify-content-center">
+                    <form>
+                        <input hidden th:id="6a72dbc4-9215-478c-ad7a-7ac8c8309fc2" type="text" name="recipeId">
+                        <div>
+                            <label>Meal Type</label>
+                            <select class="browser-default custom-select" id="meal_type" name="meal_type">
+                                <option value="Breakfast">Breakfast</option>
+                                <option value="Lunch">Lunch</option>
+                                <option value="Dinner">Dinner</option>
+                                <option value="Snack">Snack</option>
+                            </select>
+                        </div>
+                        <label>Portions:</label>
+                        <input type="number" class="form-control" name="portions">
+
+                        <div class="input-group date" data-provide="datepicker">
+                            <label>Day:</label>
+                            <input type="date" class="form-control" name="planned_date">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
                             </div>
                         </div>
-                    </div>-->
-                </th:block>
-                </tbody>
-            </table>
-            <hr class="hr-2 bg-dark">
-            <span style="visibility: hidden">....</span>
-        </div>
+                        <button type="submit" name="addToPlan" class="btn bg-hero glow-button">Add to Plan</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <hr class="hr-2 bg-dark">
+        <span style="visibility: hidden">....</span>
     </main>
-    <footer>
-        <th:block th:include="~{fragments/footer}"></th:block>
-    </footer>
 </div>
+<footer>
+    <th:block th:include="~{fragments/footer}"></th:block>
+</footer>
 </body>
 </html>
