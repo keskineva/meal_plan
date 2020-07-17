@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import softuni.meal_plan.model.binding.IngredientAddBindingModel;
 import softuni.meal_plan.model.binding.RecipeAddBindingModel;
 import softuni.meal_plan.model.service.IngredientServiceModel;
 import softuni.meal_plan.model.service.RecipeServiceModel;
@@ -33,7 +32,6 @@ public class RecipeController extends BaseController {
     private final ModelMapper modelMapper;
     private final RecipeService recipeService;
     private final IngredientService ingredientService;
-    private IngredientAddBindingModel ingredientAddBindingModel;
 
     @Autowired
     public RecipeController(ModelMapper modelMapper, RecipeService recipeService, IngredientService ingredientService) {
