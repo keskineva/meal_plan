@@ -6,6 +6,10 @@ public class IngredientServiceModel extends BaseServiceModel {
     public IngredientServiceModel() {
     }
 
+    public IngredientServiceModel(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import softuni.meal_plan.model.binding.IngredientAddBindingModel;
 import softuni.meal_plan.model.binding.RecipeAddBindingModel;
+import softuni.meal_plan.model.service.IngredientServiceModel;
 import softuni.meal_plan.model.service.RecipeServiceModel;
 import softuni.meal_plan.service.IngredientService;
 import softuni.meal_plan.service.RecipeService;
@@ -20,6 +22,7 @@ import softuni.meal_plan.web.annotations.PageTitle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +33,7 @@ public class RecipeController extends BaseController {
     private final ModelMapper modelMapper;
     private final RecipeService recipeService;
     private final IngredientService ingredientService;
+    private IngredientAddBindingModel ingredientAddBindingModel;
 
     @Autowired
     public RecipeController(ModelMapper modelMapper, RecipeService recipeService, IngredientService ingredientService) {
@@ -37,12 +41,6 @@ public class RecipeController extends BaseController {
         this.recipeService = recipeService;
         this.ingredientService = ingredientService;
     }
-
-
-//    @ModelAttribute("allIngredients")
-//    public List<Ingredient> populateIngredients() {
-//        return this.ingredientService.findAll();
-//    }
 
     @ModelAttribute("allRecipes")
     public List<RecipeServiceModel> populateRecipes() {
@@ -72,7 +70,7 @@ public class RecipeController extends BaseController {
         return "recipe/add-recipe";
     }
 
-    @PostMapping(value = "/add", params={"save"})
+    @PostMapping(value = "/add", params = {"save"})
     @PreAuthorize("isAuthenticated()")
     public ModelAndView addConfirm(@Valid @ModelAttribute("recipeAddBindingModel") RecipeAddBindingModel recipeAddBindingModel,
                                    BindingResult bindingResult,
@@ -87,25 +85,32 @@ public class RecipeController extends BaseController {
             modelAndView.setViewName("redirect:/recipes/add");
             return modelAndView;
         } else {
-            this.recipeService.addRecipe(this.modelMapper.map(recipeAddBindingModel, RecipeServiceModel.class));
-            modelAndView.setViewName("redirect:/");
-            return modelAndView;
+
+            List<RecipeAddBindingModel.Row> ingredientsList = recipeAddBindingModel.getIngredientsList();
+            List<String> ingredients = new LinkedList<>();
+            for (RecipeAddBindingModel.Row ingredient : ingredientsList) {
+                ingredients.add(ingredient.getIngredient());
+            }
+            List<IngredientServiceModel> ingredientEntityList = this.ingredientService.saveIngredientList(ingredients);
+            RecipeServiceModel recipeServiceModel = this.modelMapper.map(recipeAddBindingModel, RecipeServiceModel.class);
+            recipeServiceModel.setIngredients(ingredientEntityList);
+            this.recipeService.addRecipe(recipeServiceModel);
+            return super.redirect("/recipes/all");
         }
     }
-    
 
-    @PostMapping(value="/add", params={"addRow"})
+    @PostMapping(value = "/add", params = {"addRow"})
     @PreAuthorize("isAuthenticated()")
     public ModelAndView addRow(final RecipeAddBindingModel recipeAddBindingModel,
-                         final BindingResult bindingResult,
-                         ModelAndView modelAndView,
-                         RedirectAttributes redirectAttributes) {
+                               final BindingResult bindingResult,
+                               ModelAndView modelAndView,
+                               RedirectAttributes redirectAttributes) {
         recipeAddBindingModel.getIngredientsList().add(new RecipeAddBindingModel.Row());
         modelAndView.addObject("recipes", recipeAddBindingModel);
         return super.view("recipe/add-recipe", modelAndView);
     }
 
-    @PostMapping(value="/add", params={"removeRow"})
+    @PostMapping(value = "/add", params = {"removeRow"})
     @PreAuthorize("isAuthenticated()")
     public ModelAndView removeRow(final RecipeAddBindingModel recipeAddBindingModel,
                                   final BindingResult bindingResult,
@@ -116,5 +121,6 @@ public class RecipeController extends BaseController {
         modelAndView.addObject("recipes", recipeAddBindingModel);
         return super.view("recipe/add-recipe", modelAndView);
     }
+
 
 }

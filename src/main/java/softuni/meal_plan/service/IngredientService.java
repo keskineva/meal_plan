@@ -11,4 +11,6 @@ public interface IngredientService {
 
     IngredientServiceModel findIngredientById(String id);
 
+    List<IngredientServiceModel> saveIngredientList(List<String> ingredients);
+
 }

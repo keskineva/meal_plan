@@ -1,6 +1,5 @@
 package softuni.meal_plan.model.service;
 
-import softuni.meal_plan.model.entity.Ingredient;
 import softuni.meal_plan.model.entity.User;
 
 import java.util.List;
@@ -11,7 +10,7 @@ public class RecipeServiceModel extends BaseServiceModel {
     private String instructions;
     private int portionsCount;
     private User author;
-    private List<Ingredient> ingredients;
+    private List<IngredientServiceModel> ingredients;
 
     public String getName() {
         return name;
@@ -53,11 +52,11 @@ public class RecipeServiceModel extends BaseServiceModel {
         this.author = author;
     }
 
-    public List<Ingredient> getIngredients() {
+    public List<IngredientServiceModel> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<Ingredient> ingredients) {
+    public void setIngredients(List<IngredientServiceModel> ingredients) {
         this.ingredients = ingredients;
     }
 }

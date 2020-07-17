@@ -6,8 +6,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import softuni.meal_plan.model.entity.Recipe;
-import softuni.meal_plan.model.entity.User;
 import softuni.meal_plan.model.service.RecipeServiceModel;
+import softuni.meal_plan.repository.IngredientRepository;
 import softuni.meal_plan.repository.RecipeRepository;
 import softuni.meal_plan.repository.UserRepository;
 import softuni.meal_plan.service.RecipeService;
@@ -21,20 +21,23 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final IngredientRepository ingredientRepository;
 
     @Autowired
-    public RecipeServiceImpl(RecipeRepository recipeRepository, UserRepository userRepository, ModelMapper modelMapper) {
+    public RecipeServiceImpl(RecipeRepository recipeRepository, UserRepository userRepository, IngredientRepository ingredientRepository, ModelMapper modelMapper) {
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;
+        this.ingredientRepository = ingredientRepository;
         this.modelMapper = modelMapper;
     }
 
     @Override
     public RecipeServiceModel addRecipe(RecipeServiceModel recipeServiceModel) {
         Recipe recipe = this.modelMapper.map(recipeServiceModel, Recipe.class);
-
+        recipe.setIngredients(ingredientRepository.saveAll(recipe.getIngredients()));
+        ingredientRepository.flush();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        recipe.setAuthor((User) auth.getPrincipal());
+        //recipe.setAuthor((User) auth.getPrincipal());
         return this.modelMapper.map(this.recipeRepository.saveAndFlush(recipe), RecipeServiceModel.class);
     }
 

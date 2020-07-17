@@ -12,6 +12,9 @@ public class Ingredient extends BaseEntity {
 
     public Ingredient() {
     }
+    public Ingredient(String oneIngredient) {
+        this.name = oneIngredient;
+    }
 
     @Column(name = "name", nullable = false)
     public String getName() {
