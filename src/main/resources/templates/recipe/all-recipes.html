@@ -2,12 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:include="~{fragments/head}"></th:block>
+    <script src="/js/addToPlan.js"></script>
+    <link rel="stylesheet" th:href="@{/css/recipe.css}">
 </head>
 <body>
 <div class="container-fluid">
     <header>
         <th:block th:include="~{fragments/nav-bar}"></th:block>
-        <link rel="stylesheet" th:href="@{/css/recipe.css}">
     </header>
     <main class="mt-5">
         <span style="visibility: hidden">....</span>
@@ -28,14 +29,14 @@
                 <td class="col-md-3 text-center" th:utext="${recipes.name}"></td>
                 <td class="button-holder mt-3 d-flex justify-content-center">
                     <form class="addToPlanForm" method="post">
-                        <input hidden value="6a72dbc4-9215-478c-ad7a-7ac8c8309fc2" type="text" name="recipe_id">
+                        <input hidden th:value="${recipes.id}" type="text" name="recipe_id">
                         <div>
                             <label>Meal Type</label>
                             <select class="browser-default custom-select" id="meal_type" name="meal_type">
-                                <option value="Breakfast">Breakfast</option>
-                                <option value="Lunch">Lunch</option>
-                                <option value="Dinner">Dinner</option>
-                                <option value="Snack">Snack</option>
+                                <option value="BREAKFAST">Breakfast</option>
+                                <option value="LUNCH">Lunch</option>
+                                <option value="DINNER">Dinner</option>
+                                <option value="SNACK">Snack</option>
                             </select>
                         </div>
                         <label>Portions:</label>

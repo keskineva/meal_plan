@@ -37,7 +37,7 @@ public class RecipeServiceImpl implements RecipeService {
         recipe.setIngredients(ingredientRepository.saveAll(recipe.getIngredients()));
         ingredientRepository.flush();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        //recipe.setAuthor((User) auth.getPrincipal());
+        //recipe.setAuthor((User)auth.getPrincipal());
         return this.modelMapper.map(this.recipeRepository.saveAndFlush(recipe), RecipeServiceModel.class);
     }
 
@@ -48,4 +48,12 @@ public class RecipeServiceImpl implements RecipeService {
                 .map(r -> this.modelMapper.map(r, RecipeServiceModel.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public RecipeServiceModel findRecipeById(String recipeId) {
+        return this.recipeRepository.findById(recipeId)
+                .map(r -> this.modelMapper.map(r, RecipeServiceModel.class))
+                .orElse(null);
+    }
+
 }

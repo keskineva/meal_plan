@@ -10,4 +10,6 @@ public interface RecipeService {
 
     List<RecipeServiceModel> findAllRecipes();
 
+    RecipeServiceModel findRecipeById(String recipeId);
+
 }

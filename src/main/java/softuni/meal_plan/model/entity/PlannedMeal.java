@@ -1,9 +1,6 @@
 package softuni.meal_plan.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -35,7 +32,7 @@ public class PlannedMeal extends BaseEntity {
         this.plannedDateTime = plannedDateTime;
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REFRESH)
     public User getUser() {
         return user;
     }
@@ -44,7 +41,7 @@ public class PlannedMeal extends BaseEntity {
         this.user = user;
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REFRESH)
     public Recipe getRecipe() {
         return recipe;
     }

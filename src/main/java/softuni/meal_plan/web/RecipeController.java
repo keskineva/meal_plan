@@ -2,16 +2,23 @@ package softuni.meal_plan.web;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import softuni.meal_plan.error.Constants;
 import softuni.meal_plan.model.binding.RecipeAddBindingModel;
+import softuni.meal_plan.model.entity.User;
 import softuni.meal_plan.model.service.IngredientServiceModel;
+import softuni.meal_plan.model.service.PlannedMealServiceModel;
 import softuni.meal_plan.model.service.RecipeServiceModel;
+import softuni.meal_plan.model.service.UserServiceModel;
 import softuni.meal_plan.service.IngredientService;
 import softuni.meal_plan.service.PlannedMealService;
 import softuni.meal_plan.service.RecipeService;
@@ -19,6 +26,8 @@ import softuni.meal_plan.web.annotations.PageTitle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,10 +36,36 @@ import java.util.stream.Collectors;
 @RequestMapping("/recipes")
 public class RecipeController extends BaseController {
 
+    public static enum MealType {
+
+        BREAKFAST("BREAKFAST"),
+        LUNCH("LUNCH"),
+        DINNER("DINNER"),
+        SNACK("SNACK");
+
+        private String type;
+
+        MealType(String type) {
+            this.type = type;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        @Override
+        public String toString() {
+            return this.getType();
+        }
+
+    }
+
+
     private final ModelMapper modelMapper;
     private final RecipeService recipeService;
     private final IngredientService ingredientService;
     private final PlannedMealService plannedMealService;
+
 
     @Autowired
     public RecipeController(ModelMapper modelMapper, RecipeService recipeService, IngredientService ingredientService, PlannedMealService plannedMealService) {
@@ -122,14 +157,63 @@ public class RecipeController extends BaseController {
 
     @PostMapping(value = "/all", params = {"addToPlan"})
     @PreAuthorize("isAuthenticated()")
-    public String addToPlan(@RequestParam("portions_count") Integer portionsCount,
-                            @RequestParam("recipe_id") String recipeId,
-                            @RequestParam("planned_date")String date,
-                            @RequestParam("meal_type") String mealType) {
+    public ModelAndView addToPlan(@RequestParam("portions_count") Integer portionsCount,
+                                  @RequestParam("recipe_id") String recipeId,
+                                  @RequestParam(value = "planned_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
+                                  @RequestParam("meal_type") MealType mealType,
+                                  ModelAndView modelAndView) {
+
+        Date mealDateTime = createMealDateTime(date, mealType);
+
+        PlannedMealServiceModel plannedMealServiceModel = new PlannedMealServiceModel();
+        plannedMealServiceModel.setPlannedPortionsCount(portionsCount);
+        plannedMealServiceModel.setPlannedDateTime(mealDateTime);
+        plannedMealServiceModel.setRecipe(recipeService.findRecipeById(recipeId));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        plannedMealServiceModel.setUser(this.modelMapper.map(user, UserServiceModel.class));
+        this.plannedMealService.addMealToPlan(plannedMealServiceModel);
+
+        return super.redirect("/recipes/all");
+    }
 
 
-        System.out.printf("%s %s %s %s",portionsCount, recipeId, date, mealType);
+    @GetMapping("/allPlanned")
+    @PageTitle("All planned recipes")
+    public ModelAndView showAllPlannedRecipes(ModelAndView modelAndView) {
+        List<PlannedMealServiceModel> plannedRecipesList = this.plannedMealService.findAllPlannedRecipes()
+                .stream()
+                .map(pr -> this.modelMapper.map(pr, PlannedMealServiceModel.class))
+                .collect(Collectors.toList());
 
-        return "ok";
+        modelAndView.addObject("plannedRecipes", plannedRecipesList);
+        return super.view("recipe/all-planned-recipes", modelAndView);
+    }
+
+    private Date createMealDateTime(Date date, MealType mealType) {
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        if (MealType.BREAKFAST.equals(mealType)) {
+            cal.set(Calendar.HOUR_OF_DAY, Constants.BREAKFAST_HOUR);
+
+        } else if (MealType.LUNCH.equals(mealType)) {
+            cal.set(Calendar.HOUR_OF_DAY, Constants.LUNCH_HOUR);
+
+        } else if (MealType.DINNER.equals(mealType)) {
+            cal.set(Calendar.HOUR_OF_DAY, Constants.DINNER_HOUR);
+
+        } else if (MealType.SNACK.equals(mealType)) {
+            cal.set(Calendar.HOUR_OF_DAY, Constants.SNACK_HOUR);
+
+        } else {
+            System.err.println("Invalid Meal Type:" + mealType);
+        }
+        return cal.getTime();
     }
 }

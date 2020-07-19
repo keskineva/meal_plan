@@ -8,5 +8,14 @@ public class Constants {
 
     public final static String PASSWORD_IS_INCORRECT = "Incorrect password";
 
+    public final static Integer BREAKFAST_HOUR = 7;
+
+    public final static Integer LUNCH_HOUR = 12;
+
+    public final static Integer DINNER_HOUR = 15;
+
+    public final static Integer SNACK_HOUR = 19;
+
+
 
 }
