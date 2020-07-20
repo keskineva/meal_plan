@@ -75,15 +75,6 @@ public class RecipeController extends BaseController {
         this.plannedMealService = plannedMealService;
     }
 
-    /*  @ModelAttribute("allRecipes")
-      public List<RecipeServiceModel> populateRecipes() {
-          List<RecipeServiceModel> recipes = this.recipeService.findAllRecipes()
-                  .stream()
-                  .map(r -> this.modelMapper.map(r, RecipeServiceModel.class))
-                  .collect(Collectors.toList());
-          return recipes;
-      }
-  */
     @GetMapping("/all")
     @PageTitle("All recipes")
     public ModelAndView showAllRecipes(ModelAndView modelAndView) {
@@ -175,19 +166,6 @@ public class RecipeController extends BaseController {
         this.plannedMealService.addMealToPlan(plannedMealServiceModel);
 
         return super.redirect("/recipes/all");
-    }
-
-
-    @GetMapping("/allPlanned")
-    @PageTitle("All planned recipes")
-    public ModelAndView showAllPlannedRecipes(ModelAndView modelAndView) {
-        List<PlannedMealServiceModel> plannedRecipesList = this.plannedMealService.findAllPlannedRecipes()
-                .stream()
-                .map(pr -> this.modelMapper.map(pr, PlannedMealServiceModel.class))
-                .collect(Collectors.toList());
-
-        modelAndView.addObject("plannedRecipes", plannedRecipesList);
-        return super.view("recipe/all-planned-recipes", modelAndView);
     }
 
     private Date createMealDateTime(Date date, MealType mealType) {

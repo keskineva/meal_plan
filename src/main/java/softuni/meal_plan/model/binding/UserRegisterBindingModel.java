@@ -14,7 +14,6 @@ public class UserRegisterBindingModel {
 
     }
 
-
     public String getId() {
         return id;
     }

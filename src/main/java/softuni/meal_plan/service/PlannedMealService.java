@@ -8,6 +8,7 @@ public interface PlannedMealService {
 
    PlannedMealServiceModel addMealToPlan(PlannedMealServiceModel plannedMealServiceModel);
 
-   List<PlannedMealServiceModel> findAllPlannedRecipes();
+   List<PlannedMealServiceModel> findAllPlannedMeals();
 
+    List<PlannedMealServiceModel> findWeeklyPlannedMeals(int weekOffSet);
 }
