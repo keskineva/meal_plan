@@ -11,7 +11,7 @@ public class Recipe extends BaseEntity {
     private String instructions;
     private int portionsCount;
     private User author;
-    private List<Ingredient> ingredients;
+    private List<RecipeIngredient> ingredients;
 
     public Recipe() {
     }
@@ -62,23 +62,12 @@ public class Recipe extends BaseEntity {
     }
 
 
-    @ManyToMany(targetEntity = Ingredient.class, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "recipe_ingredients",
-            joinColumns = @JoinColumn(
-                    name = "recipe_id",
-                    referencedColumnName = "id"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "ingredient_id",
-                    referencedColumnName = "id"
-            )
-    )
-    public List<Ingredient> getIngredients() {
+    @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER)
+    public List<RecipeIngredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<Ingredient> ingredients) {
+    public void setIngredients(List<RecipeIngredient> ingredients) {
         this.ingredients = ingredients;
     }
 }

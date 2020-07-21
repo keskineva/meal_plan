@@ -34,10 +34,9 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public RecipeServiceModel addRecipe(RecipeServiceModel recipeServiceModel) {
         Recipe recipe = this.modelMapper.map(recipeServiceModel, Recipe.class);
-        recipe.setIngredients(ingredientRepository.saveAll(recipe.getIngredients()));
-        ingredientRepository.flush();
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        //recipe.setAuthor((User)auth.getPrincipal());
+        //recipe.setAuthor((User)auth.getPrincipal()); //TODO
         return this.modelMapper.map(this.recipeRepository.saveAndFlush(recipe), RecipeServiceModel.class);
     }
 

@@ -4,26 +4,33 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import softuni.meal_plan.model.entity.Ingredient;
+import softuni.meal_plan.model.entity.RecipeIngredient;
 import softuni.meal_plan.model.service.IngredientServiceModel;
+import softuni.meal_plan.model.service.RecipeIngredientServiceModel;
 import softuni.meal_plan.repository.IngredientRepository;
+import softuni.meal_plan.repository.PlannedMealRepository;
+import softuni.meal_plan.repository.RecipeIngredientRepository;
 import softuni.meal_plan.service.IngredientService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class IngredientServiceImpl implements IngredientService {
 
     private final IngredientRepository ingredientRepository;
+    private final PlannedMealRepository plannedMealRepository;
     private final ModelMapper modelMapper;
+    private final RecipeIngredientRepository recipeIngredientRepository;
 
     @Autowired
-    public IngredientServiceImpl(IngredientRepository ingredientRepository, ModelMapper modelMapper) {
+    public IngredientServiceImpl(IngredientRepository ingredientRepository, PlannedMealRepository plannedMealRepository, ModelMapper modelMapper, RecipeIngredientRepository recipeIngredientRepository) {
         this.ingredientRepository = ingredientRepository;
+        this.plannedMealRepository = plannedMealRepository;
         this.modelMapper = modelMapper;
+        this.recipeIngredientRepository = recipeIngredientRepository;
     }
 
-    @Override
+/*    @Override
     public List<IngredientServiceModel> saveIngredientList(List<String> ingredients) {
         List<Ingredient> ingredientList = new ArrayList<>();
         for (String oneIngredient : ingredients) {
@@ -37,11 +44,31 @@ public class IngredientServiceImpl implements IngredientService {
             ingredientServiceModelList.add(new IngredientServiceModel(oneIngr.getName()));
         }
         return ingredientServiceModelList;
+    }*/
+
+    @Override
+    public List<IngredientServiceModel> findAllIngredientsInPlannedMeals() {
+        return null;
     }
 
     @Override
-    public List<Ingredient> findAll() {
-        return this.ingredientRepository.findAll();
+    public IngredientServiceModel saveIngredient(String ingredient) {
+        Ingredient ingr = this.ingredientRepository.findByName(ingredient);
+        if (ingr == null) {
+            ingr = this.ingredientRepository.saveAndFlush(new Ingredient(ingredient));
+        }
+        IngredientServiceModel model = new IngredientServiceModel();
+        model.setName(ingr.getName());
+        model.setId(ingr.getId());
+        return model;
+    }
+
+    @Override
+    public RecipeIngredientServiceModel saveRecipeIngredient(RecipeIngredientServiceModel model) {
+        RecipeIngredient recipeIngredient = modelMapper.map(model, RecipeIngredient.class);
+        recipeIngredient = this.recipeIngredientRepository.saveAndFlush(recipeIngredient);
+        RecipeIngredientServiceModel recipeIngredientServiceModel = modelMapper.map(recipeIngredient, RecipeIngredientServiceModel.class);
+        return recipeIngredientServiceModel;
     }
 
     @Override

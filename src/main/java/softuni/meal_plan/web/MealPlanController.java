@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/planned")
-public class MealPlanController extends BaseController{
+public class MealPlanController extends BaseController {
 
     private final ModelMapper modelMapper;
     private final RecipeService recipeService;
@@ -41,6 +41,5 @@ public class MealPlanController extends BaseController{
         modelAndView.addObject("plannedMeals", plannedMealsList);
         return super.view("recipe/all-planned-meals", modelAndView);
     }
-
 
 }

@@ -15,10 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import softuni.meal_plan.error.Constants;
 import softuni.meal_plan.model.binding.RecipeAddBindingModel;
 import softuni.meal_plan.model.entity.User;
-import softuni.meal_plan.model.service.IngredientServiceModel;
-import softuni.meal_plan.model.service.PlannedMealServiceModel;
-import softuni.meal_plan.model.service.RecipeServiceModel;
-import softuni.meal_plan.model.service.UserServiceModel;
+import softuni.meal_plan.model.service.*;
 import softuni.meal_plan.service.IngredientService;
 import softuni.meal_plan.service.PlannedMealService;
 import softuni.meal_plan.service.RecipeService;
@@ -26,10 +23,7 @@ import softuni.meal_plan.web.annotations.PageTitle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -109,16 +103,24 @@ public class RecipeController extends BaseController {
             modelAndView.setViewName("redirect:/recipes/add");
             return modelAndView;
         } else {
-
-            List<RecipeAddBindingModel.Row> ingredientsList = recipeAddBindingModel.getIngredientsList();
-            List<String> ingredients = new LinkedList<>();
-            for (RecipeAddBindingModel.Row ingredient : ingredientsList) {
-                ingredients.add(ingredient.getIngredient());
-            }
-            List<IngredientServiceModel> ingredientEntityList = this.ingredientService.saveIngredientList(ingredients);
+            // 1.save in recipe table
             RecipeServiceModel recipeServiceModel = this.modelMapper.map(recipeAddBindingModel, RecipeServiceModel.class);
-            recipeServiceModel.setIngredients(ingredientEntityList);
-            this.recipeService.addRecipe(recipeServiceModel);
+            recipeServiceModel = this.recipeService.addRecipe(recipeServiceModel);
+
+            // 2. save in ingredients table
+            List<RecipeAddBindingModel.Row> ingredientsList = recipeAddBindingModel.getIngredientsList();
+            Map<IngredientServiceModel, Integer> ingredients = new LinkedHashMap<>();
+            for (RecipeAddBindingModel.Row ingredient : ingredientsList) {
+                IngredientServiceModel ingredientServiceModel = this.ingredientService.saveIngredient(ingredient.getIngredient());
+
+                // recipe_ingredients table
+                RecipeIngredientServiceModel model = new RecipeIngredientServiceModel();
+                model.setAmount(ingredient.getAmount());
+                model.setIngredient(ingredientServiceModel);
+                model.setRecipe(recipeServiceModel);
+                this.ingredientService.saveRecipeIngredient(model);
+            }
+
             return super.redirect("/recipes/all");
         }
     }
