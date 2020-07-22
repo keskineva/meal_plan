@@ -148,6 +148,26 @@ public class RecipeController extends BaseController {
         return super.view("recipe/add-recipe", modelAndView);
     }
 
+    @GetMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PageTitle("Delete Recipe")
+    public ModelAndView deleteRecipe(@PathVariable String id, ModelAndView modelAndView) {
+        RecipeServiceModel recipeServiceModel = this.recipeService.findRecipeById(id);
+
+        modelAndView.addObject("recipe", recipeServiceModel);
+        modelAndView.addObject("recipeId", id);
+
+        return super.view("recipe/delete-recipe", modelAndView);
+    }
+
+    @PostMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView deleteRecipeConfirm(@PathVariable String id) {
+        this.recipeService.deleteRecipe(id);
+
+        return super.redirect("/recipes/all");
+    }
+
     @PostMapping(value = "/all", params = {"addToPlan"})
     @PreAuthorize("isAuthenticated()")
     public ModelAndView addToPlan(@RequestParam("portions_count") Integer portionsCount,

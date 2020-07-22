@@ -43,7 +43,7 @@ public class OrderController extends BaseController {
     @PreAuthorize("isAuthenticated()")
     public ModelAndView createOrderConfirm(ModelAndView modelAndView) {
         //1. take all planned meals
-        List<PlannedMealServiceModel> allPlannedMeals = plannedMealService.findAllPlannedMeals();
+        List<PlannedMealServiceModel> allPlannedMeals = plannedMealService.findAllPlannedMealsByUsername();
         Map<String, Integer> totalIngredientsAndAmountsMap = new LinkedHashMap<>();
         //2. foreach plannedmeal: plannedmeal.portions*
         for (PlannedMealServiceModel onePlannedMeal : allPlannedMeals) {

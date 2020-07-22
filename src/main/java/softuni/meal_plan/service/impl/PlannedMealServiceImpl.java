@@ -2,6 +2,8 @@ package softuni.meal_plan.service.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import softuni.meal_plan.model.entity.PlannedMeal;
 import softuni.meal_plan.model.entity.Recipe;
@@ -48,13 +50,27 @@ public class PlannedMealServiceImpl implements PlannedMealService {
     }
 
     @Override
-    public List<PlannedMealServiceModel> findAllPlannedMeals() {
-        return this.plannedMealRepository.findAll()
+    public List<PlannedMealServiceModel> findAllPlannedMealsByUsername() {
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+
+        return this.plannedMealRepository.findPlannedMealsByUser_Username(username)
                 .stream()
                 .map(r -> this.modelMapper.map(r, PlannedMealServiceModel.class))
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void deletePlannedMeal(String plannedMealId) {
+        this.plannedMealRepository.deleteById(plannedMealId);
+        this.plannedMealRepository.flush();
+    }
 
 
 }

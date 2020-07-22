@@ -56,7 +56,10 @@
                 <td class="col-md-3 text-center" th:utext="${plannedMeals.recipe.image}"></td>
                 <td class="col-md-3 text-center" th:utext="${plannedMeals.recipe.name}"></td>
                 <td class="button-holder mt-3 d-flex justify-content-center">
-                    <button type="submit" name="addToPlan" class="btn bg-hero glow-button">Remove from Plan</button>
+                    <form method="post">
+                        <input hidden th:value="${plannedMeals.id}" th:name="plannedMealId">
+                    <button type="submit"  name="deleteFromPlan" class="btn bg-hero glow-button">Remove from Plan</button>
+                    </form>
                 </td>
             </tr>
             </tbody>

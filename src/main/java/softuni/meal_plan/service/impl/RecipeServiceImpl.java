@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import softuni.meal_plan.error.RecipeNotFoundException;
 import softuni.meal_plan.model.entity.Recipe;
 import softuni.meal_plan.model.service.RecipeServiceModel;
 import softuni.meal_plan.repository.IngredientRepository;
@@ -55,4 +56,12 @@ public class RecipeServiceImpl implements RecipeService {
                 .orElse(null);
     }
 
+    @Override
+    public void deleteRecipe(String id) {
+        Recipe recipe = this.recipeRepository.findById(id).orElseThrow(() -> new RecipeNotFoundException("Recipe with given id was not found!"));
+
+        this.recipeRepository.delete(recipe);
+    }
 }
+
+

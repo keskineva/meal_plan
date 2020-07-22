@@ -14,7 +14,7 @@ public class FaviconInterceptor extends HandlerInterceptorAdapter {
     public void postHandle(HttpServletRequest request,
                            HttpServletResponse response, Object handler, ModelAndView modelAndView) {
 
-        String favicon = "https://i.imgur.com/sxsLvFV.png";
+        String favicon = "https://www.freepngimg.com/download/grocery/41636-2-groceries-png-image-high-quality.png";
 
         if (modelAndView != null) {
             modelAndView.addObject("favicon", favicon);

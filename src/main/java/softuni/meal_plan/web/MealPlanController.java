@@ -3,7 +3,9 @@ package softuni.meal_plan.web;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import softuni.meal_plan.model.service.PlannedMealServiceModel;
 import softuni.meal_plan.service.IngredientService;
@@ -33,13 +35,26 @@ public class MealPlanController extends BaseController {
     @GetMapping("/meals")
     @PageTitle("All planned meals")
     public ModelAndView showAllPlannedMeals(ModelAndView modelAndView) {
-        List<PlannedMealServiceModel> plannedMealsList = this.plannedMealService.findAllPlannedMeals()
+        getAllPlannedMeals(modelAndView);
+        return super.view("recipe/all-planned-meals", modelAndView);
+    }
+
+    @PostMapping(value = "/meals", params = "deleteFromPlan")
+    @PageTitle("All planned meals")
+    public ModelAndView deletePlannedMeal(@RequestParam("plannedMealId") String plannedMealId, ModelAndView modelAndView) {
+        this.plannedMealService.deletePlannedMeal(plannedMealId);
+        getAllPlannedMeals(modelAndView);
+        return super.view("recipe/all-planned-meals", modelAndView);
+    }
+
+    private void getAllPlannedMeals(ModelAndView modelAndView) {
+        List<PlannedMealServiceModel> plannedMealsList = this.plannedMealService.findAllPlannedMealsByUsername()
                 .stream()
                 .map(pr -> this.modelMapper.map(pr, PlannedMealServiceModel.class))
                 .collect(Collectors.toList());
 
         modelAndView.addObject("plannedMeals", plannedMealsList);
-        return super.view("recipe/all-planned-meals", modelAndView);
     }
+
 
 }

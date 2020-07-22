@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="~{fragments/head}"></th:block>
+</head>
+<body>
+<div class="container-fluid">
+    <header>
+        <th:block th:include="~{fragments/nav-bar}"></th:block>
+    </header>
+    <main class="mt-5">
+        <div class="bg-image-quote-all">
+            <span style="visibility: hidden">....</span>
+            <h1 class="text-center font-weight-bold text-dark">Delete Recipe</h1>
+            <hr class="hr-2 bg-dark w-25">
+            <form id="add-quote-form" class="form w-25 mx-auto" th:action="@{/recipes/delete/{id}(id=${recipeId})}"
+                  method="post" enctype="multipart/form-data">
+                <input type="hidden" name="_csrf" value="c686cd14-a7f9-4216-8009-c093b7d3df86">
+                <div class="form-group">
+                    <label for="recipe-name" class="mb-1">Recipe Name</label>
+                    <input type="text" class="form-control text-center" id="recipe-name" name="name"
+                           th:value="${recipeId}" disabled>
+                </div>
+                <hr class="hr-2 bg-dark">
+                <div class="button-holder d-flex justify-content-center">
+                    <button type="submit" class="btn bg-hero ml-4 glow-button">Delete Recipe</button>
+                </div>
+            </form>
+            <span style="visibility: hidden">....</span>
+        </div>
+    </main>
+    <footer>
+        <th:block th:include="~{fragments/footer}"></th:block>
+    </footer>
+</div>
+</body>
+</html>

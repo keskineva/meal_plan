@@ -12,4 +12,6 @@ public interface RecipeService {
 
     RecipeServiceModel findRecipeById(String recipeId);
 
+    void deleteRecipe(String id);
+
 }

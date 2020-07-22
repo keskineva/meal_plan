@@ -8,8 +8,8 @@ public interface PlannedMealService {
 
    PlannedMealServiceModel addMealToPlan(PlannedMealServiceModel plannedMealServiceModel);
 
-   List<PlannedMealServiceModel> findAllPlannedMeals();
+   List<PlannedMealServiceModel> findAllPlannedMealsByUsername();
 
 
-
+    void deletePlannedMeal(String plannedMealId);
 }
