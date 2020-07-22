@@ -10,5 +10,6 @@ public interface PlannedMealService {
 
    List<PlannedMealServiceModel> findAllPlannedMeals();
 
-    List<PlannedMealServiceModel> findWeeklyPlannedMeals(int weekOffSet);
+
+
 }

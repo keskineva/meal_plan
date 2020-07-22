@@ -16,21 +16,37 @@
         <table class="table table-hover w-75 mx-auto" id="CreateOrder">
             <thead>
             <tr class="row mx-auto">
-                <th class="col-md-1 text-center">Row Count</th>
                 <th class="col-md-3 text-center">Ingredient</th>
                 <th class="col-md-3 text-center">Amount</th>
             </tr>
             </thead>
             <tbody>
-            <tr class="row mx-auto">
-                <td class="col-md-1 text-center">1</td>
-                <td class="col-md-3 text-center">Tomatoes</td>
-                <td class="col-md-3 text-center">1kg</td>
-                <td class="button-holder mt-3 d-flex justify-content-center">
-                </td>
+            <tr class="row mx-auto" th:each="element : ${totalIngredientsAndAmountsMap}">
+                <td th:text="${element.key}">key</td>
+                <td th:text="${element.value}">value</td>
+                <td class="button-holder mt-3 d-flex justify-content-center"></td>
             </tr>
             </tbody>
         </table>
+
+        <form>
+            <input type="radio" id="ebag" name="supplier" value="ebag">
+            <label for="ebag">Ebag</label><br>
+            <input type="radio" id="supermag" name="supplier" value="supermag">
+            <label for="supermag">Supermag</label><br>
+            <div>
+                <form method="get" th:action="@{/orders/buy}">
+                    <button type="submit" name="buy" class="btn btn-secondary btn-sm">Buy</button>
+                </form>
+            </div>
+            <div>
+                <form method="get" th:action="@{/orders/shoppingList}">
+                    <button type="submit" name="shoppingList" class="btn btn-secondary btn-sm">Download Shopping List in
+                        PDF
+                    </button>
+                </form>
+            </div>
+        </form>
         <span style="visibility: hidden">....</span>
 
     </main>

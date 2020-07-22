@@ -61,6 +61,11 @@
             </tr>
             </tbody>
         </table>
+        <div class="button-holder mt-3 d-flex justify-content-center">
+            <form method="post" th:action="@{/orders/create}">
+            <button type="submit" name="order" class="btn bg-hero glow-button">Create Order</button>
+            </form>
+        </div>
         <hr class="hr-2 bg-dark">
         <span style="visibility: hidden">....</span>
     </main>

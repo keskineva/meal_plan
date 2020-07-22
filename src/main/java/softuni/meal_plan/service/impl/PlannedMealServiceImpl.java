@@ -12,7 +12,6 @@ import softuni.meal_plan.repository.RecipeRepository;
 import softuni.meal_plan.repository.UserRepository;
 import softuni.meal_plan.service.PlannedMealService;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,22 +55,6 @@ public class PlannedMealServiceImpl implements PlannedMealService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<PlannedMealServiceModel> findWeeklyPlannedMeals(int weekOffSet) {
-        Date today = new Date();
-        Date beginOfWeek = getBeginOfWeek(weekOffSet, today);
-        Date endOfWeek = getEndOfWeek();
-        this.plannedMealRepository.findAll();// todo query when planned date between begin and end
-        return null;
-    }
 
-    private Date getEndOfWeek() {
-        return null;
-    }
-
-
-    private Date getBeginOfWeek(int weekOffSet, Date today) {
-        return null;
-    }
 
 }
