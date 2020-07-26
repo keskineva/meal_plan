@@ -66,7 +66,7 @@ public class UserController extends BaseController {
         if (bindingResult.hasErrors()
                 || !userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getConfirmPassword())) {
 
-            //todo redirect attributes
+
             redirectAttributes.addFlashAttribute("userRegisterBindingModel", userRegisterBindingModel);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userRegisterBindingModel",
                     bindingResult);
