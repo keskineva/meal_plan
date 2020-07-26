@@ -8,7 +8,6 @@ import softuni.meal_plan.model.entity.RecipeIngredient;
 import softuni.meal_plan.model.service.IngredientServiceModel;
 import softuni.meal_plan.model.service.RecipeIngredientServiceModel;
 import softuni.meal_plan.repository.IngredientRepository;
-import softuni.meal_plan.repository.PlannedMealRepository;
 import softuni.meal_plan.repository.RecipeIngredientRepository;
 import softuni.meal_plan.service.IngredientService;
 
@@ -18,33 +17,16 @@ import java.util.List;
 public class IngredientServiceImpl implements IngredientService {
 
     private final IngredientRepository ingredientRepository;
-    private final PlannedMealRepository plannedMealRepository;
     private final ModelMapper modelMapper;
     private final RecipeIngredientRepository recipeIngredientRepository;
 
     @Autowired
-    public IngredientServiceImpl(IngredientRepository ingredientRepository, PlannedMealRepository plannedMealRepository, ModelMapper modelMapper, RecipeIngredientRepository recipeIngredientRepository) {
+    public IngredientServiceImpl(IngredientRepository ingredientRepository, ModelMapper modelMapper, RecipeIngredientRepository recipeIngredientRepository) {
         this.ingredientRepository = ingredientRepository;
-        this.plannedMealRepository = plannedMealRepository;
         this.modelMapper = modelMapper;
         this.recipeIngredientRepository = recipeIngredientRepository;
     }
 
-/*    @Override
-    public List<IngredientServiceModel> saveIngredientList(List<String> ingredients) {
-        List<Ingredient> ingredientList = new ArrayList<>();
-        for (String oneIngredient : ingredients) {
-            ingredientList.add(new Ingredient(oneIngredient));
-        }
-        // TODO filter existing entitites!!!
-        List<Ingredient> savedIngredients = this.ingredientRepository.saveAll(ingredientList);
-
-        List<IngredientServiceModel> ingredientServiceModelList = new ArrayList<>();
-        for (Ingredient oneIngr : savedIngredients) {
-            ingredientServiceModelList.add(new IngredientServiceModel(oneIngr.getName()));
-        }
-        return ingredientServiceModelList;
-    }*/
 
     @Override
     public List<IngredientServiceModel> findAllIngredientsInPlannedMeals() {

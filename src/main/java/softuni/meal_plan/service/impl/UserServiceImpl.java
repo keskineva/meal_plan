@@ -140,6 +140,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserServiceModel register(UserServiceModel userServiceModel) {
+        //UserServiceModel->User
+        User user = this.modelMapper
+                .map(userServiceModel, User.class);
+
+        //save the user to the repository and return the userServiceModel
+
+        return this.modelMapper
+                .map(this.userRepository.saveAndFlush(user), UserServiceModel.class);
+    }
+
+    @Override
     public UserServiceModel findByUsername(String username) {
         return this.userRepository.findByUsername(username)
                 .map(user -> this.modelMapper.map(user, UserServiceModel.class))

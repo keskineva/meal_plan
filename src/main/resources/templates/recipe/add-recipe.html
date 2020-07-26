@@ -20,19 +20,27 @@
                 <div class="form-group">
                     <label for="title" class="text-black mb-1">Title</label>
                     <input th:field="*{name}"
-                           type="text" class="form-control" id="title" placeholder="Title..." name="title">
+                           type="text" th:errorclass="bg-danger" class="form-control" id="title" placeholder="Title..."
+                           name="title">
+                    <small th:each="e : ${#fields.errors('name')}" th:text="${e}" class="text-danger">Incorrect
+                        name!</small>
                 </div>
                 <div class="form-group">
                     <label for="instructions" class="text-black mb-1">Instructions</label>
-                    <input th:field="*{instructions}" type="text" class="form-control" id="instructions"
+                    <input th:field="*{instructions}" th:errorclass="bg-danger" type="text" class="form-control"
+                           id="instructions"
                            placeholder="Instructions..."
                            name="instructions">
+                    <small th:each="e : ${#fields.errors('instructions')}" th:text="${e}" class="text-danger">Incorrect
+                        instructions!</small>
                 </div>
                 <div class="form-group">
                     <label for="portionsCount" class="text-black mb-1">Portions</label>
-                    <input th:field="*{portionsCount}"
-                           type="text" class="form-control" id="portionsCount" placeholder="Portions..."
+                    <input th:field="*{portionsCount}" th:errorclass="bg-danger" type="text" class="form-control"
+                           id="portionsCount" placeholder="Portions..."
                            name="portionsCount">
+                    <small th:each="e : ${#fields.errors('portionsCount')}" th:text="${e}" class="text-danger">Incorrect
+                        portions!</small>
                 </div>
 
 
@@ -43,7 +51,9 @@
                             <th>Row count</th>
                             <th>Ingredient</th>
                             <th>Amount</th>
-                            <th><button type="submit" name="addRow">Add row</button></th>
+                            <th>
+                                <button type="submit" name="addRow">Add row</button>
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -63,10 +73,10 @@
                         </tr>
                         </tbody>
                     </table>
-                   <!-- <div class="set-form">
-                        <input type="button" id="more_fields" onclick="add_fields();" value="Add More"
-                               class="btn btn-info"/>
-                    </div>-->
+                    <!-- <div class="set-form">
+                         <input type="button" id="more_fields" onclick="add_fields();" value="Add More"
+                                class="btn btn-info"/>
+                     </div>-->
                 </div>
 
                 <hr class="bg-hero hr-2"/>

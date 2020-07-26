@@ -36,6 +36,7 @@ public class RecipeAddBindingModel {
         ingredientsList = new LinkedList<>();
     }
 
+   // @Length(min = 2, message = "Name length must be more than two characters")
     public String getName() {
         return name;
     }
@@ -44,7 +45,7 @@ public class RecipeAddBindingModel {
         this.name = name;
     }
 
-
+    //@Length(min = 5, message = "Instructions length must be more than 5 characters")
     public String getInstructions() {
         return instructions;
     }
@@ -53,6 +54,7 @@ public class RecipeAddBindingModel {
         this.instructions = instructions;
     }
 
+   // @Min(value = 1, message = "Enter valid number of portions")
     public int getPortionsCount() {
         return portionsCount;
     }
@@ -61,6 +63,8 @@ public class RecipeAddBindingModel {
         this.portionsCount = portionsCount;
     }
 
+
+   // @NotNull(message = "Enter at least 1 ingredient!")
     public List<Row> getIngredientsList() {
         return ingredientsList;
     }

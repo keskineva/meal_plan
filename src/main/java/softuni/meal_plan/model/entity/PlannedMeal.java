@@ -1,6 +1,7 @@
 package softuni.meal_plan.model.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.FutureOrPresent;
 import java.util.Date;
 
 @Entity
@@ -24,6 +25,7 @@ public class PlannedMeal extends BaseEntity {
     }
 
     @Column(name = "planned_date", nullable = false)
+    @FutureOrPresent(message = "Please enter a valid date!")
     public Date getPlannedDateTime() {
         return plannedDateTime;
     }

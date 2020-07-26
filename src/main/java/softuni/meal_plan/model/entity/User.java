@@ -18,7 +18,7 @@ public class User extends BaseEntity implements UserDetails {
 
     public User() {
     }
-
+    @Column(name = "name", nullable = false)
     public String getName() {
         return name;
     }
@@ -27,7 +27,7 @@ public class User extends BaseEntity implements UserDetails {
         this.name = name;
     }
 
-
+    @Column(name = "address", nullable = false)
     public String getAddress() {
         return address;
     }

@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -23,11 +24,17 @@ import softuni.meal_plan.web.annotations.PageTitle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/recipes")
+@Validated
 public class RecipeController extends BaseController {
 
     public static enum MealType {
@@ -68,18 +75,7 @@ public class RecipeController extends BaseController {
         this.ingredientService = ingredientService;
         this.plannedMealService = plannedMealService;
     }
-
-    @GetMapping("/all")
-    @PageTitle("All recipes")
-    public ModelAndView showAllRecipes(ModelAndView modelAndView) {
-        List<RecipeServiceModel> recipes = this.recipeService.findAllRecipes()
-                .stream()
-                .map(r -> this.modelMapper.map(r, RecipeServiceModel.class))
-                .collect(Collectors.toList());
-
-        modelAndView.addObject("recipes", recipes);
-        return super.view("recipe/all-recipes", modelAndView);
-    }
+//adding recipe
 
     @GetMapping("/add")
     @PreAuthorize("isAuthenticated()")
@@ -168,12 +164,31 @@ public class RecipeController extends BaseController {
         return super.redirect("/recipes/all");
     }
 
+    //view all recipes
+    @GetMapping("/all")
+    @PageTitle("All recipes")
+    public ModelAndView showAllRecipes(ModelAndView modelAndView) {
+        List<RecipeServiceModel> recipes = this.recipeService.findAllRecipes()
+                .stream()
+                .map(r -> this.modelMapper.map(r, RecipeServiceModel.class))
+                .collect(Collectors.toList());
+
+        LocalDate date = LocalDate.now().plusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String dateStr = date.format(formatter);
+
+        modelAndView.addObject("minDate", dateStr);//2020-07-27
+        modelAndView.addObject("recipes", recipes);
+        return super.view("recipe/all-recipes", modelAndView);
+    }
+
+    //adding recipe to plan
     @PostMapping(value = "/all", params = {"addToPlan"})
     @PreAuthorize("isAuthenticated()")
-    public ModelAndView addToPlan(@RequestParam("portions_count") Integer portionsCount,
-                                  @RequestParam("recipe_id") String recipeId,
-                                  @RequestParam(value = "planned_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
-                                  @RequestParam("meal_type") MealType mealType,
+    public ModelAndView addToPlan(@RequestParam("portions_count") @Min(1) Integer portionsCount,
+                                  @RequestParam("recipe_id") @NotNull String recipeId,
+                                  @RequestParam("planned_date") @DateTimeFormat(pattern = "yyyy-MM-dd") @FutureOrPresent Date date,
+                                  @RequestParam("meal_type") @NotNull MealType mealType,
                                   ModelAndView modelAndView) {
 
         Date mealDateTime = createMealDateTime(date, mealType);

@@ -1,5 +1,7 @@
 package softuni.meal_plan.model.service;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.FutureOrPresent;
 import java.util.Date;
 
 public class PlannedMealServiceModel extends BaseServiceModel {
@@ -20,6 +22,7 @@ public class PlannedMealServiceModel extends BaseServiceModel {
         this.recipe = recipe;
     }
 
+    @DecimalMin(value = "1", message = "Please enter valid number of portions")
     public int getPlannedPortionsCount() {
         return plannedPortionsCount;
     }
@@ -28,6 +31,7 @@ public class PlannedMealServiceModel extends BaseServiceModel {
         this.plannedPortionsCount = plannedPortionsCount;
     }
 
+    @FutureOrPresent(message = "Please enter a valid date from today forward.")
     public Date getPlannedDateTime() {
         return plannedDateTime;
     }

@@ -1,7 +1,10 @@
 package softuni.meal_plan.model.service;
 
+import org.hibernate.validator.constraints.Length;
 import softuni.meal_plan.model.entity.User;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class RecipeServiceModel extends BaseServiceModel {
@@ -12,6 +15,7 @@ public class RecipeServiceModel extends BaseServiceModel {
     private User author;
     private List<IngredientServiceModel> ingredients;
 
+    @Length(min = 2, message = "Recipe name length must be more than two characters")
     public String getName() {
         return name;
     }
@@ -20,6 +24,7 @@ public class RecipeServiceModel extends BaseServiceModel {
         this.name = name;
     }
 
+    @NotNull(message = "Please link a picture for this recipe!")
     public byte[] getImage() {
         return image;
     }
@@ -28,6 +33,7 @@ public class RecipeServiceModel extends BaseServiceModel {
         this.image = image;
     }
 
+    @Length(min = 5, message = "Recipe instructions length must be more than 5 characters")
     public String getInstructions() {
         return instructions;
     }
@@ -36,6 +42,7 @@ public class RecipeServiceModel extends BaseServiceModel {
         this.instructions = instructions;
     }
 
+    @DecimalMin(value = "1", message = "Please enter a valid number of portions!")
     public int getPortionsCount() {
         return portionsCount;
     }
@@ -52,6 +59,7 @@ public class RecipeServiceModel extends BaseServiceModel {
         this.author = author;
     }
 
+    @NotNull(message = "Please enter at least one ingredient!")
     public List<IngredientServiceModel> getIngredients() {
         return ingredients;
     }

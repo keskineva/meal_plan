@@ -6,10 +6,14 @@ import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import softuni.meal_plan.model.binding.UserEditBindingModel;
+import softuni.meal_plan.model.binding.UserLoginBindingModel;
 import softuni.meal_plan.model.binding.UserRegisterBindingModel;
 import softuni.meal_plan.model.service.RoleServiceModel;
 import softuni.meal_plan.model.service.UserServiceModel;
@@ -17,6 +21,8 @@ import softuni.meal_plan.model.view.UserProfileViewModel;
 import softuni.meal_plan.service.UserService;
 import softuni.meal_plan.web.annotations.PageTitle;
 
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
@@ -39,32 +45,72 @@ public class UserController extends BaseController {
         this.modelMapper = modelMapper;
         this.encoder = encoder;
     }
-
     @GetMapping("/register")
     @PreAuthorize("isAnonymous()")
     @PageTitle("Register")
-    public ModelAndView register() {
+    public ModelAndView register(Model model) {
+        if (!model.containsAttribute("userRegisterBindingModel")) {
+            model.addAttribute("userRegisterBindingModel", new UserRegisterBindingModel());
+        }
         return super.view("user/register");
     }
 
     @PostMapping("/register")
-    @PreAuthorize("isAnonymous()")
-    public ModelAndView registerConfirm(@ModelAttribute UserRegisterBindingModel model) {
-        if (!model.getPassword().equals(model.getConfirmPassword())) {
+    //@ModelAttribute //this is mapping the fields automatically
+    //BindingResult should be always after the modelatrribute that it is validating
+    //RedirectAttributes for when we need to redirect
+    public ModelAndView registerConfirm(@Valid @ModelAttribute("userRegisterBindingModel") UserRegisterBindingModel userRegisterBindingModel,
+                                  BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+
+        //in the context of this controller we redirect to the register page.
+        if (bindingResult.hasErrors()
+                || !userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getConfirmPassword())) {
+
+            //todo redirect attributes
+            redirectAttributes.addFlashAttribute("userRegisterBindingModel", userRegisterBindingModel);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userRegisterBindingModel",
+                    bindingResult);
             return super.view("user/register");
         }
 
-        this.userService.registerUser(this.modelMapper.map(model, UserServiceModel.class));
-
+        this.userService.register(this.modelMapper
+                .map(userRegisterBindingModel, UserServiceModel.class));
         return super.redirect("/login");
     }
 
     @GetMapping("/login")
-    @PreAuthorize("isAnonymous()")
-    @PageTitle("Login")
-    public ModelAndView login() {
-        return super.view("user/login");
+    public String login(Model model) {
+        if (!model.containsAttribute("userLoginBindingModel")) {
+            model.addAttribute("userLoginBindingModel", new UserLoginBindingModel());
+            model.addAttribute("notFound", false);
+        }
+        return "user/login";
     }
+
+    @PostMapping("/login")
+    public ModelAndView loginConfirm(@Valid @ModelAttribute("userLoginBindingModel") UserLoginBindingModel userLoginBindingModel,
+                               BindingResult bindingResult, RedirectAttributes redirectAttributes,
+                               HttpSession httpSession) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userLoginBindingModel"
+                    , bindingResult);
+            return super.redirect("/login");
+        }
+        //find user
+        UserServiceModel user = this.userService.findByUsername(userLoginBindingModel.getUsername());
+
+        if (user == null || !user.getPassword().equals(userLoginBindingModel.getPassword())) {
+            redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
+            redirectAttributes.addFlashAttribute("notFound", true);
+            return super.redirect("/login");
+        }
+
+        httpSession.setAttribute("user", user);
+        return super.redirect("/");
+
+    }
+
 
     @GetMapping("/profile")
     @PreAuthorize("isAuthenticated()")
@@ -86,7 +132,7 @@ public class UserController extends BaseController {
         return super.view("user/edit-profile", modelAndView);
     }
 
-    @PatchMapping("/edit")
+    @PostMapping("/edit")
     @PreAuthorize("isAuthenticated()")
     public ModelAndView editProfileConfirm(@ModelAttribute UserEditBindingModel model){
         if (!model.getPassword().equals(model.getConfirmPassword())){

@@ -26,4 +26,5 @@ public interface UserService extends UserDetailsService {
 
     UserServiceModel findByUsername(String username);
 
+    UserServiceModel register(UserServiceModel userServiceModel);
 }

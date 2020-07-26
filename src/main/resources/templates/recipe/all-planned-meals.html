@@ -48,17 +48,22 @@
                 <th class="col-md-1 text-center">#</th>
                 <th class="col-md-3 text-center">Recipe Image</th>
                 <th class="col-md-3 text-center">Recipe Name</th>
+                <th class="col-md-3 text-center">Recipe Date</th>
             </tr>
             </thead>
             <tbody>
             <tr class="row mx-auto" th:each="plannedMeals, iter : *{plannedMeals}">
                 <td class="col-md-1 text-center" th:utext="${iter.index + 1}"></td>
-                <td class="col-md-3 text-center" th:utext="${plannedMeals.recipe.image}"></td>
+                <td class="col-md-3 text-center">
+                    <img width="200" height="200" src="/img/recipeImage.png">
+                </td>
                 <td class="col-md-3 text-center" th:utext="${plannedMeals.recipe.name}"></td>
+                <td class="col-md-3 text-center" th:utext="${plannedMeals.plannedDateTime}"></td>
                 <td class="button-holder mt-3 d-flex justify-content-center">
                     <form method="post">
                         <input hidden th:value="${plannedMeals.id}" th:name="plannedMealId">
-                    <button type="submit"  name="deleteFromPlan" class="btn bg-hero glow-button">Remove from Plan</button>
+                        <button type="submit" name="deleteFromPlan" class="btn bg-hero glow-button">Remove from Plan
+                        </button>
                     </form>
                 </td>
             </tr>
@@ -66,7 +71,7 @@
         </table>
         <div class="button-holder mt-3 d-flex justify-content-center">
             <form method="post" th:action="@{/orders/create}">
-            <button type="submit" name="order" class="btn bg-hero glow-button">Create Order</button>
+                <button type="submit" name="order" class="btn bg-hero glow-button">Create Order</button>
             </form>
         </div>
         <hr class="hr-2 bg-dark">

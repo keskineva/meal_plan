@@ -1,5 +1,7 @@
 package softuni.meal_plan.model.binding;
 
+import org.hibernate.validator.constraints.Length;
+
 public class UserLoginBindingModel {
 
     private String username;
@@ -7,10 +9,11 @@ public class UserLoginBindingModel {
     private String password;
 
 
-    public UserLoginBindingModel(){
+    public UserLoginBindingModel() {
 
     }
 
+    @Length(min = 2, message = "Username length must be more than two characters")
     public String getUsername() {
         return username;
     }
@@ -19,6 +22,7 @@ public class UserLoginBindingModel {
         this.username = username;
     }
 
+    @Length(min = 3, message = "Password length must be more than three characters")
     public String getPassword() {
         return password;
     }

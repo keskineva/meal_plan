@@ -1,5 +1,9 @@
 package softuni.meal_plan.model.binding;
 
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.Email;
+
 public class UserEditBindingModel {
 
     private String username;
@@ -11,6 +15,7 @@ public class UserEditBindingModel {
     public UserEditBindingModel() {
     }
 
+    @Length(min = 2, message = "Username length must be more than two characters")
     public String getUsername() {
         return username;
     }
@@ -19,6 +24,7 @@ public class UserEditBindingModel {
         this.username = username;
     }
 
+    @Length(min = 3, message = "Password length must be more than three characters")
     public String getOldPassword() {
         return oldPassword;
     }
@@ -26,7 +32,7 @@ public class UserEditBindingModel {
     public void setOldPassword(String oldPassword) {
         this.oldPassword = oldPassword;
     }
-
+    @Length(min = 3, message = "Password length must be more than three characters")
     public String getPassword() {
         return password;
     }
@@ -34,7 +40,7 @@ public class UserEditBindingModel {
     public void setPassword(String password) {
         this.password = password;
     }
-
+    @Length(min = 3, message = "Password length must be more than three characters")
     public String getConfirmPassword() {
         return confirmPassword;
     }
@@ -43,6 +49,7 @@ public class UserEditBindingModel {
         this.confirmPassword = confirmPassword;
     }
 
+    @Email(message = "Please enter a valid email address!")
     public String getEmail() {
         return email;
     }
