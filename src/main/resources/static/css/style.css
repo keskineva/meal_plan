@@ -25,3 +25,14 @@ textarea {
     font-weight: bold;
 }
 
+.recipefooter {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+.table {
+    width: 50%;
+    margin: 0 auto !important;
+}
+

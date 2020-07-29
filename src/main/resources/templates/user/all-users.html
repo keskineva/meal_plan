@@ -4,67 +4,65 @@
     <th:block th:include="~{fragments/head}"></th:block>
 </head>
 <body>
-<div class="container-fluid">
-    <header>
-        <th:block th:include="~{fragments/nav-bar}"></th:block>
-    </header>
-    <main class="mt-5">
-        <div class="bg-image-quote-all">
+    <div class="container-fluid">
+        <header>
+            <th:block th:include="~{fragments/nav-bar}"></th:block>
+        </header>
+        <main>
             <span style="visibility: hidden">....</span>
             <h1 class="text-center bold font-weight-bold text-dark">All users</h1>
             <hr class="hr-2 bg-dark">
-            <table class="table  center table-striped  table-hover table-condensed table-sm">
-                <thead>
-                <tr class="row mx-auto">
-                    <th class="col-md-1 align-content-center font-weight-bold">#</th>
-                    <th class="col-md-2 align-content-center font-weight-bold">Username</th>
-                    <th class="col-md-2 align-content-centerr font-weight-bold">Email</th>
-                    <th class="col-md-2 align-content-center font-weight-bold">Address</th>
-                    <th class="col-md-2 align-content-center font-weight-bold">Role</th>
-                    <th class="col-md-2 align-content-center font-weight-bold">Additional Role</th>
-                </tr>
-                </thead>
-                <tbody>
-                <th:block th:each="users, iter : ${users}">
-                    <tr class="row mx-auto">
-                        <th class="col-md-1 align-content-center" th:utext="${iter.index + 1}"></th>
-                        <td class="col-md-2 align-content-center" th:utext="${users.username}"></td>
-                        <td class="col-md-2 align-content-center" th:utext="${users.email}"></td>
-                        <td class="col-md-2 align-content-centerr" th:utext="${users.address}"></td>
-                        <th:block th:each="authorities : ${users.authorities}">
-                            <td class="col-md-2 align-content-center"
-                                th:utext="${authorities.authority}">
-                            </td>
-                        </th:block>
+            <div class="table-responsive-sm">
+                <table class="table w-auto">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Additional Role</th>
+                            <th scope="col">Additional Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="users, iter : ${users}">
+                        <tr scope="row">
+                            <td th:utext="${iter.index + 1}"></td>
+                            <td th:utext="${users.username}"></td>
+                            <td th:utext="${users.email}"></td>
+                            <td th:utext="${users.address}"></td>
+                            <th:block th:each="authorities : ${users.authorities}">
+                                <td th:utext="${authorities.authority}"></td>
+                            </th:block>
 
-                        <th:block sec:authorize="hasRole('ROLE_ROOT')">
-                            <th:block th:if="${#lists.size(users.authorities) == 2}">
-                                <td class="col-md-2 align-content-center">
-                                    <form th:action="@{/users/set-user/{id}(id=${users.id})}" method="post">
-                                        <button class="btn btn-dark btn-width">USER</button>
+                            <th:block sec:authorize="hasRole('ROLE_ROOT')">
+                                <th:block th:if="${#lists.size(users.authorities) == 2}">
+                                    <td>
+                                        <form th:action="@{/users/set-user/{id}(id=${users.id})}" method="post">
+                                            <button class="btn btn-dark btn-width">USER</button>
+                                        </form>
+                                    </td>
+                                </th:block>
+                            </th:block>
+
+                            <th:block th:if="${#lists.size(users.authorities) == 1}">
+                                <td>
+                                    <form th:action="@{/users/set-admin/{id}(id=${users.id})}" method="post">
+                                        <button class="btn btn-dark btn-width">ADMIN</button>
                                     </form>
                                 </td>
                             </th:block>
-                        </th:block>
-
-                        <th:block th:if="${#lists.size(users.authorities) == 1}">
-                            <td class="col-md-2 align-content-center">
-                                <form th:action="@{/users/set-admin/{id}(id=${users.id})}" method="post">
-                                    <button class="btn btn-dark btn-width">ADMIN</button>
-                                </form>
-                            </td>
-                        </th:block>
-                    </tr>
-                </th:block>
-                </tbody>
-            </table>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
             <hr class="hr-2 bg-dark">
-            <span style="visibility: hidden">....</span>
-        </div>
-    </main>
-    <footer>
-        <th:block th:include="~{fragments/footer}"></th:block>
-    </footer>
-</div>
+        </main>
+        <footer>
+            <th:block th:include="~{fragments/footer}"></th:block>
+        </footer>
+    </div>
 </body>
 </html>

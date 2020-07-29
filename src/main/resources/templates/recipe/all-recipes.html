@@ -6,66 +6,68 @@
     <link rel="stylesheet" th:href="@{/css/recipe.css}">
 </head>
 <body>
-<div class="container-fluid">
-    <header>
-        <th:block th:include="~{fragments/nav-bar}"></th:block>
-    </header>
-    <main class="mt-5">
-        <span style="visibility: hidden">....</span>
-        <h1 class="text-center bold font-weight-bold text-dark">All recipes</h1>
-        <hr class="hr-2 bg-dark">
-        <table class="table table-hover w-75 mx-auto">
-            <thead>
-            <tr class="row mx-auto">
-                <th class="col-md-1 text-center">#</th>
-                <th class="col-md-3 text-center">Recipe Image</th>
-                <th class="col-md-3 text-center">Recipe Name</th>
-                <th class="col-md-3 text-center">Add recipe to plan</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr class="row mx-auto" th:each="recipes, iter : *{recipes}">
-                <td class="col-md-1 text-center" th:utext="${iter.index + 1}"></td>
-                <td class="col-md-3 text-center">
-                    <img width="200" height="200" src="/img/recipeImage.png">
-                </td>
-                <td class="col-md-3 text-center" th:utext="${recipes.name}"></td>
-                <td class="button-holder mt-3 d-flex justify-content-center">
-                    <form class="addToPlanForm" method="post">
-                        <input hidden th:value="${recipes.id}" type="text" name="recipe_id">
-                        <div>
-                            <label>Meal Type</label>
-                            <select class="browser-default custom-select" id="meal_type" name="meal_type" required>
-                                <option value="BREAKFAST">Breakfast</option>
-                                <option value="LUNCH">Lunch</option>
-                                <option value="DINNER">Dinner</option>
-                                <option value="SNACK">Snack</option>
-                            </select>
-                        </div>
+    <div class="container-fluid">
+        <header>
+            <th:block th:include="~{fragments/nav-bar}"></th:block>
+        </header>
+        <main>
+            <span style="visibility: hidden">....</span>
+            <h1 class="text-center bold font-weight-bold text-dark">All recipes</h1>
+            <hr class="hr-2 bg-dark">
+            <table class="table table-hover w-75 mx-auto">
+                <thead>
+                    <tr class="row mx-auto">
+                        <th scope="col" class="col-md-1 text-center">#</th>
+                        <th scope="col" class="col-md-3 text-center">Recipe Image</th>
+                        <th scope="col" class="col-md-3 text-center">Recipe Name</th>
+                        <th scope="col" class="col-md-3 text-center">Add recipe to plan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr scope="row" class="row mx-auto" th:each="recipes, iter : *{recipes}">
+                        <td class="col-md-1 text-center" th:utext="${iter.index + 1}"></td>
+                        <td class="col-md-3 text-center">
+                            <img width="200" height="200" src="/img/recipeImage.png">
+                        </td>
+                        <td class="col-md-3 text-center">
+                            <a th:href="@{'/recipes/show?id=' + ${recipes.id}}" th:utext="${recipes.name}"></a>
+                        </td>
+                        <td class="button-holder mt-3 d-flex justify-content-center">
+                            <form class="addToPlanForm" method="post">
+                                <input hidden th:value="${recipes.id}" type="text" name="recipe_id">
+                                <div>
+                                    <label>Meal Type</label>
+                                    <select class="browser-default custom-select" id="meal_type" name="meal_type" required>
+                                        <option value="BREAKFAST">Breakfast</option>
+                                        <option value="LUNCH">Lunch</option>
+                                        <option value="DINNER">Dinner</option>
+                                        <option value="SNACK">Snack</option>
+                                    </select>
+                                </div>
 
-                        <label>Portions</label>
-                        <input type="number" class="form-control" value="1" name="portions_count" min="1" required>
+                                <label>Portions</label>
+                                <input type="number" class="form-control" value="1" name="portions_count" min="1" required>
 
-                        <label>When?</label>
-                        <div class="input-group date" data-provide="datepicker">
-                            <input type="date" class="form-control calendarwhen" name="planned_date" th:min="${minDate}" required>
-                            <div class="input-group-addon">
-                                <span class="glyphicon glyphicon-th"></span>
-                            </div>
-                        </div>
-                        <br />
-                        <button type="submit" name="addToPlan" class="btn bg-hero glow-button">Add to Plan</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <hr class="hr-2 bg-dark">
-        <span style="visibility: hidden">....</span>
-    </main>
-</div>
-<footer>
-    <th:block th:include="~{fragments/footer}"></th:block>
-</footer>
+                                <label>When?</label>
+                                <div class="input-group date" data-provide="datepicker">
+                                    <input type="date" class="form-control calendarwhen" name="planned_date" th:min="${minDate}" required>
+                                    <div class="input-group-addon">
+                                        <span class="glyphicon glyphicon-th"></span>
+                                    </div>
+                                </div>
+                                <br />
+                                <button type="submit" name="addToPlan" class="btn bg-hero glow-button">Add to Plan</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr class="hr-2 bg-dark">
+            <span style="visibility: hidden">....</span>
+        </main>
+        <footer>
+            <th:block th:include="~{fragments/footer}"></th:block>
+        </footer>
+    </div>
 </body>
 </html>

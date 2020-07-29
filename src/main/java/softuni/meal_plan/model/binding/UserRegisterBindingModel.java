@@ -26,7 +26,7 @@ public class UserRegisterBindingModel {
         this.id = id;
     }
 
-    @Length(min = 2, message = "Name length must be more than two characters")
+    @Length(min = 3, message = "Name length must be more than three characters")
     public String getName() {
         return name;
     }
@@ -35,7 +35,7 @@ public class UserRegisterBindingModel {
         this.name = name;
     }
 
-    @Length(min = 2, message = "Username length must be more than two characters")
+    @Length(min = 3, message = "Username length must be more than three characters")
     public String getUsername() {
         return username;
     }

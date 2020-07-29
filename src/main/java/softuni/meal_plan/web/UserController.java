@@ -73,7 +73,7 @@ public class UserController extends BaseController {
             return super.view("user/register");
         }
 
-        this.userService.register(this.modelMapper
+        this.userService.registerUser(this.modelMapper
                 .map(userRegisterBindingModel, UserServiceModel.class));
         return super.redirect("/login");
     }

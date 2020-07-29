@@ -13,7 +13,7 @@ public class UserLoginBindingModel {
 
     }
 
-    @Length(min = 2, message = "Username length must be more than two characters")
+    @Length(min = 3, message = "Username length must be more than three characters")
     public String getUsername() {
         return username;
     }

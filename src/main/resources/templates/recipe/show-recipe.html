@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="~{fragments/head}"></th:block>
+</head>
+<body>
+<div class="container-fluid">
+    <header>
+        <th:block th:include="~{fragments/nav-bar}"></th:block>
+        <script src="/js/addIngredients.js"></script>
+    </header>
+    <main class="mt-5">
+        <div class="bg-image-quote-create">
+            <hr class="bg-hero hr-2"/>
+            <h1 class="text-center font-weight-bold text-black">Add Recipe</h1>
+            <hr class="bg-hero w-25 hr-2"/>
+           <div th:object="${recipeShowBindingModel}">
+
+                <label for="title" class="text-black mb-1">Title</label>
+                <div th:field="*{name}"
+                       type="text" th:errorclass="bg-danger" class="form-control" id="title" placeholder="Title..."
+                       name="title" required minlength="3">
+                </div>
+
+                <label for="instructions" class="text-black mb-1">Instructions</label>
+                <div th:field="*{instructions}" th:errorclass="bg-danger" type="text" class="form-control"
+                       id="instructions"
+                       placeholder="Instructions..."
+                     name="instructions" required minlength="3">
+                </div>
+
+                <label for="portionsCount" class="text-black mb-1">Portions</label>
+                <div th:field="*{portionsCount}" th:errorclass="bg-danger" type="text" class="form-control"
+                       id="portionsCount" placeholder="Portions..."
+                     name="portionsCount" min="1" required>
+                </div>
+
+                <hr class="bg-hero hr-2"/>
+        </div>
+    </main>
+    <footer>
+        <th:block th:include="~{fragments/footer}"></th:block>
+    </footer>
+</div>
+</body>
+</html>
