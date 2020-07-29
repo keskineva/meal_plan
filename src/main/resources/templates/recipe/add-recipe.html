@@ -21,7 +21,7 @@
                     <label for="title" class="text-black mb-1">Title</label>
                     <input th:field="*{name}"
                            type="text" th:errorclass="bg-danger" class="form-control" id="title" placeholder="Title..."
-                           name="title">
+                           name="title" required minlength="3">
                     <small th:each="e : ${#fields.errors('name')}" th:text="${e}" class="text-danger">Incorrect
                         name!</small>
                 </div>
@@ -30,7 +30,7 @@
                     <input th:field="*{instructions}" th:errorclass="bg-danger" type="text" class="form-control"
                            id="instructions"
                            placeholder="Instructions..."
-                           name="instructions">
+                           name="instructions" required minlength="3">
                     <small th:each="e : ${#fields.errors('instructions')}" th:text="${e}" class="text-danger">Incorrect
                         instructions!</small>
                 </div>
@@ -38,7 +38,7 @@
                     <label for="portionsCount" class="text-black mb-1">Portions</label>
                     <input th:field="*{portionsCount}" th:errorclass="bg-danger" type="text" class="form-control"
                            id="portionsCount" placeholder="Portions..."
-                           name="portionsCount">
+                           name="portionsCount" min="1" required >
                     <small th:each="e : ${#fields.errors('portionsCount')}" th:text="${e}" class="text-danger">Incorrect
                         portions!</small>
                 </div>
@@ -61,11 +61,11 @@
                             <td th:text="${rowStat.count}">1</td>
                             <td>
                                 <input type="text" th:field="*{ingredientsList[__${rowStat.index}__].ingredient}"
-                                       th:errorclass="fieldError"/>
+                                       th:errorclass="fieldError" required minlength="3"/>
                             </td>
                             <td>
                                 <input type="text" th:field="*{ingredientsList[__${rowStat.index}__].amount}"
-                                       th:errorclass="fieldError"/>
+                                       th:errorclass="fieldError" required min="1"/>
                             </td>
                             <td>
                                 <button type="submit" name="removeRow" th:value="${rowStat.index}">Remove row</button>

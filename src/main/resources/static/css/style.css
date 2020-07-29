@@ -19,4 +19,9 @@ textarea {
     --input-padding-x: 1.5rem;
     --input-padding-y: 0.75rem;
 }
+.text-center{
+    font-size: larger;
+    font-style: inherit;
+    font-weight: bold;
+}
 

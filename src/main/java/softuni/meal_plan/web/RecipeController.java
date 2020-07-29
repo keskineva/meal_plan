@@ -8,7 +8,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -92,10 +91,13 @@ public class RecipeController extends BaseController {
                                    RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
-            for (ObjectError oneError : bindingResult.getAllErrors()) {
+            /*for (ObjectError oneError : bindingResult.getAllErrors()) {
                 System.err.println(oneError.toString());
-            }
-            redirectAttributes.addFlashAttribute("recipeAddBindingModel", recipeAddBindingModel);
+            }*/
+            redirectAttributes.addFlashAttribute("recipeAddBindingModel",recipeAddBindingModel);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.recipeAddBindingModel",
+                    bindingResult);
+            /*redirectAttributes.addFlashAttribute("recipeAddBindingModel", recipeAddBindingModel);*/
             modelAndView.setViewName("redirect:/recipes/add");
             return modelAndView;
         } else {

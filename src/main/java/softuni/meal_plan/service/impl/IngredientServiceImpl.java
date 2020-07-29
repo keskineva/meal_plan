@@ -11,8 +11,6 @@ import softuni.meal_plan.repository.IngredientRepository;
 import softuni.meal_plan.repository.RecipeIngredientRepository;
 import softuni.meal_plan.service.IngredientService;
 
-import java.util.List;
-
 @Service
 public class IngredientServiceImpl implements IngredientService {
 
@@ -28,10 +26,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
 
-    @Override
-    public List<IngredientServiceModel> findAllIngredientsInPlannedMeals() {
-        return null;
-    }
+
 
     @Override
     public IngredientServiceModel saveIngredient(String ingredient) {
