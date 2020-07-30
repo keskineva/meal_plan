@@ -217,7 +217,8 @@ public class RecipeController extends BaseController {
     //adding recipe to plan
     @PostMapping(value = "/all", params = {"addToPlan"})
     @PreAuthorize("isAuthenticated()")
-    public ModelAndView addToPlan(@RequestParam("portions_count") @Min(1) Integer portionsCount,
+    @ResponseBody
+    public String addToPlan(@RequestParam("portions_count") @Min(1) Integer portionsCount,
                                   @RequestParam("recipe_id") @NotNull String recipeId,
                                   @RequestParam("planned_date") @DateTimeFormat(pattern = "yyyy-MM-dd") @FutureOrPresent Date date,
                                   @RequestParam("meal_type") @NotNull MealType mealType,
@@ -234,7 +235,7 @@ public class RecipeController extends BaseController {
         plannedMealServiceModel.setUser(this.modelMapper.map(user, UserServiceModel.class));
         this.plannedMealService.addMealToPlan(plannedMealServiceModel);
 
-        return super.redirect("/recipes/all");
+        return "OK. Added.";
     }
 
     private Date createMealDateTime(Date date, MealType mealType) {

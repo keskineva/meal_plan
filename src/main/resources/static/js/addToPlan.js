@@ -1,12 +1,18 @@
-$('.addToPlanForm').submit(function(e){
+$('.addToPlanForm').submit(function (e) {
     e.preventDefault();
-    //do some verification
+
     $.ajax({
-        url: 'recipes/all?addToPlan',
+        method: 'POST',
+        url: 'all?addToPlan',
         data: $(this).serialize(),
-        success: function(data)
-        {
+        success: function (data) {
+            console.log("Successfully added.")
             //callback methods go right here
+        },
+        error: function (req, err) {
+            console.error('Error: ' + err);
         }
     });
+
+    return false;
 });
