@@ -1,8 +1,5 @@
 package softuni.meal_plan.model.binding;
 
-import org.hibernate.validator.constraints.Length;
-
-import javax.validation.constraints.NotNull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,6 +8,14 @@ public class RecipeShowBindingModel {
     public static class Row {
         private String ingredient;
         private int amount;
+
+        public Row() {
+        }
+
+        public Row(String ingredient, int amount) {
+            this.ingredient = ingredient;
+            this.amount = amount;
+        }
 
         public String getIngredient() {
             return ingredient;
@@ -39,7 +44,7 @@ public class RecipeShowBindingModel {
         ingredientsList = new LinkedList<>();
     }
 
-    @Length(min = 2, message = "Name length must be more than two characters")
+
     public String getName() {
         return name;
     }
@@ -48,7 +53,7 @@ public class RecipeShowBindingModel {
         this.name = name;
     }
 
-    @Length(min = 5, message = "Instructions length must be more than 5 characters")
+
     public String getInstructions() {
         return instructions;
     }
@@ -67,7 +72,7 @@ public class RecipeShowBindingModel {
     }
 
 
-   @NotNull(message = "Enter at least 1 ingredient!")
+
     public List<Row> getIngredientsList() {
         return ingredientsList;
     }

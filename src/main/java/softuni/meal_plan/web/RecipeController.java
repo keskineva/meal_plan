@@ -14,11 +14,14 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import softuni.meal_plan.error.Constants;
 import softuni.meal_plan.model.binding.RecipeAddBindingModel;
+import softuni.meal_plan.model.binding.RecipeShowBindingModel;
 import softuni.meal_plan.model.entity.User;
 import softuni.meal_plan.model.service.*;
 import softuni.meal_plan.service.IngredientService;
 import softuni.meal_plan.service.PlannedMealService;
+import softuni.meal_plan.service.RecipeIngredientService;
 import softuni.meal_plan.service.RecipeService;
+import softuni.meal_plan.web.annotations.PageFavicon;
 import softuni.meal_plan.web.annotations.PageTitle;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,15 +68,38 @@ public class RecipeController extends BaseController {
     private final RecipeService recipeService;
     private final IngredientService ingredientService;
     private final PlannedMealService plannedMealService;
+    private final RecipeIngredientService recipeIngredientService;
 
 
     @Autowired
-    public RecipeController(ModelMapper modelMapper, RecipeService recipeService, IngredientService ingredientService, PlannedMealService plannedMealService) {
+    public RecipeController(ModelMapper modelMapper, RecipeService recipeService, IngredientService ingredientService, PlannedMealService plannedMealService, RecipeIngredientService recipeIngredientService) {
         this.modelMapper = modelMapper;
         this.recipeService = recipeService;
         this.ingredientService = ingredientService;
         this.plannedMealService = plannedMealService;
+        this.recipeIngredientService = recipeIngredientService;
     }
+
+    @PageFavicon("https://www.freepngimg.com/download/grocery/41636-2-groceries-png-image-high-quality.png")
+    @GetMapping(value = "/show", params = {"id"})
+    @PreAuthorize("isAuthenticated()")
+    public ModelAndView showRecipe(@RequestParam("id") String recipeId, ModelAndView modelAndView) {
+        RecipeServiceModel oneRecipe = recipeService.findRecipeById(recipeId);
+        RecipeShowBindingModel recipeShowBindingModel = modelMapper.map(oneRecipe, RecipeShowBindingModel.class);
+        recipeShowBindingModel.setIngredientsList(new ArrayList<>());
+
+        List<RecipeIngredientServiceModel> recipeIngredientServiceModelList = recipeIngredientService.findIngredientsAndAmounts(oneRecipe.getId());
+        for (RecipeIngredientServiceModel oneIngredientServiceModel : recipeIngredientServiceModelList) {
+            recipeShowBindingModel.getIngredientsList().add(new RecipeShowBindingModel.Row(
+                    oneIngredientServiceModel.getIngredient().getName(),
+                    oneIngredientServiceModel.getAmount()));
+        }
+
+        modelAndView.addObject("recipeShowBindingModel", recipeShowBindingModel);
+        modelAndView.setViewName("recipe/show-recipe");
+        return modelAndView;
+    }
+
 //adding recipe
 
     @GetMapping("/add")
@@ -94,7 +120,7 @@ public class RecipeController extends BaseController {
             /*for (ObjectError oneError : bindingResult.getAllErrors()) {
                 System.err.println(oneError.toString());
             }*/
-            redirectAttributes.addFlashAttribute("recipeAddBindingModel",recipeAddBindingModel);
+            redirectAttributes.addFlashAttribute("recipeAddBindingModel", recipeAddBindingModel);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.recipeAddBindingModel",
                     bindingResult);
             /*redirectAttributes.addFlashAttribute("recipeAddBindingModel", recipeAddBindingModel);*/
@@ -109,6 +135,10 @@ public class RecipeController extends BaseController {
             List<RecipeAddBindingModel.Row> ingredientsList = recipeAddBindingModel.getIngredientsList();
             Map<IngredientServiceModel, Integer> ingredients = new LinkedHashMap<>();
             for (RecipeAddBindingModel.Row ingredient : ingredientsList) {
+                if (ingredient.getIngredient().isBlank()) {
+                    continue; // if ingredient is empty, just skip it!
+                }
+
                 IngredientServiceModel ingredientServiceModel = this.ingredientService.saveIngredient(ingredient.getIngredient());
 
                 // recipe_ingredients table

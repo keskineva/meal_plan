@@ -52,7 +52,7 @@ public class OrderController extends BaseController {
             String recipeId = onePlannedMeal.getRecipe().getId();
             //4. recipe_ingredients -> ingredients and amounts
             List<RecipeIngredientServiceModel> ingredientsAmounts =
-                    recipeIngredientService.ingredientsAndAmounts(recipeId);
+                    recipeIngredientService.findIngredientsAndAmounts(recipeId);
 
             for (RecipeIngredientServiceModel ingredientAmount : ingredientsAmounts) {
                 String ingredientName = ingredientAmount.getIngredient().getName();

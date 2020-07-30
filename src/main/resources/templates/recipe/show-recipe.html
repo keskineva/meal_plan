@@ -7,35 +7,36 @@
 <div class="container-fluid">
     <header>
         <th:block th:include="~{fragments/nav-bar}"></th:block>
-        <script src="/js/addIngredients.js"></script>
     </header>
     <main class="mt-5">
         <div class="bg-image-quote-create">
             <hr class="bg-hero hr-2"/>
-            <h1 class="text-center font-weight-bold text-black">Add Recipe</h1>
+            <h1 class="text-center font-weight-bold text-black h1" th:text="${recipeShowBindingModel.name}"></h1>
             <hr class="bg-hero w-25 hr-2"/>
-           <div th:object="${recipeShowBindingModel}">
-
-                <label for="title" class="text-black mb-1">Title</label>
-                <div th:field="*{name}"
-                       type="text" th:errorclass="bg-danger" class="form-control" id="title" placeholder="Title..."
-                       name="title" required minlength="3">
+            <div th:object="${recipeShowBindingModel}">
+                <div class="text-center">
+                    <h2 class="text-black">Instructions</h2>
+                    <p th:text="${recipeShowBindingModel.instructions}"></p>
                 </div>
-
-                <label for="instructions" class="text-black mb-1">Instructions</label>
-                <div th:field="*{instructions}" th:errorclass="bg-danger" type="text" class="form-control"
-                       id="instructions"
-                       placeholder="Instructions..."
-                     name="instructions" required minlength="3">
+                <br/>
+                <div class="table-responsive-sm">
+                    <table class="table w-auto">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col">Amount gram or count</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr scope="row" th:each="row,rowStat : ${recipeShowBindingModel.ingredientsList}">
+                            <td th:text="${row.ingredient}"></td>
+                            <td th:text="${row.amount}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
-
-                <label for="portionsCount" class="text-black mb-1">Portions</label>
-                <div th:field="*{portionsCount}" th:errorclass="bg-danger" type="text" class="form-control"
-                       id="portionsCount" placeholder="Portions..."
-                     name="portionsCount" min="1" required>
-                </div>
-
                 <hr class="bg-hero hr-2"/>
+            </div>
         </div>
     </main>
     <footer>

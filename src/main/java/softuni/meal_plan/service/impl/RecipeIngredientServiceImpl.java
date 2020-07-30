@@ -28,17 +28,15 @@ public class RecipeIngredientServiceImpl implements RecipeIngredientService {
 
 
     @Override
-    public List<RecipeIngredientServiceModel> ingredientsAndAmounts(String id) {
+    public List<RecipeIngredientServiceModel> findIngredientsAndAmounts(String recipeId) {
         List<RecipeIngredient> entityList = em.createQuery("SELECT s from RecipeIngredient s where s.recipe.id LIKE :recipeId", RecipeIngredient.class)
-                .setParameter("recipeId", id)
+                .setParameter("recipeId", recipeId)
                 .getResultList();
         List<RecipeIngredientServiceModel> result = new ArrayList<>();
 
         for (RecipeIngredient entity : entityList) {
-
             result.add(modelMapper.map(entity, RecipeIngredientServiceModel.class));
         }
-
 
         return result;
     }

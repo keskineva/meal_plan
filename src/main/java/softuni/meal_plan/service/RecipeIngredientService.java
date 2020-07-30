@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface RecipeIngredientService {
 
-    List<RecipeIngredientServiceModel> ingredientsAndAmounts(String id);
+    List<RecipeIngredientServiceModel> findIngredientsAndAmounts(String id);
 }
