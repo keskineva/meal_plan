@@ -11,6 +11,25 @@
             <th:block th:include="~{fragments/nav-bar}"></th:block>
         </header>
         <main>
+<!--            <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">-->
+<!--                &lt;!&ndash; Position it &ndash;&gt;-->
+<!--                <div style="position: absolute; top: 0; right: 0;">-->
+<!--                    &lt;!&ndash; Then put toasts within &ndash;&gt;-->
+<!--                    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">-->
+<!--                        <div class="toast-header">-->
+<!--                            <img src="..." class="rounded mr-2" alt="...">-->
+<!--                            <strong class="mr-auto">Bootstrap</strong>-->
+<!--                            <small class="text-muted">just now</small>-->
+<!--                            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">-->
+<!--                                <span aria-hidden="true">&times;</span>-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                        <div class="toast-body">-->
+<!--                            See? Just like this.-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
             <span style="visibility: hidden">....</span>
             <h1 class="text-center bold font-weight-bold text-dark">All recipes</h1>
             <hr class="hr-2 bg-dark">
@@ -57,6 +76,8 @@
                                 </div>
                                 <br />
                                 <button type="submit" name="addToPlan" class="btn bg-hero glow-button">Add to Plan</button>
+                                <div class="addToPlanResult alert alert-success" role="alert" hidden></div>
+                                <div class="addToPlanResultErr alert alert-danger" role="alert" hidden></div>
                             </form>
                         </td>
                     </tr>
