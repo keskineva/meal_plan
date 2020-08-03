@@ -21,6 +21,7 @@ import softuni.meal_plan.model.view.UserProfileViewModel;
 import softuni.meal_plan.service.UserService;
 import softuni.meal_plan.web.annotations.PageTitle;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.security.Principal;
@@ -81,11 +82,32 @@ public class UserController extends BaseController {
     @GetMapping("/login")
     @PreAuthorize("isAnonymous()")
     @PageTitle("Login")
-    public String login(Model model) {
+    public String login(HttpServletRequest request, Model model) {
         if (!model.containsAttribute("userLoginBindingModel")) {
             model.addAttribute("userLoginBindingModel", new UserLoginBindingModel());
             model.addAttribute("notFound", false);
         }
+        return "user/login";
+    }
+
+    @GetMapping(value = "/login", params = {"error"})
+    @PreAuthorize("isAnonymous()")
+    @PageTitle("Login")
+    public String loginError(HttpServletRequest request, Model model) {
+        if (!model.containsAttribute("userLoginBindingModel")) {
+            model.addAttribute("userLoginBindingModel", new UserLoginBindingModel());
+            model.addAttribute("notFound", false);
+        }
+
+        String errorMessage = null;
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Exception ex = (Exception) session.getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
+            if (ex != null) {
+                errorMessage = ex.getMessage();
+            }
+        }
+        model.addAttribute("errorMessage", errorMessage);
         return "user/login";
     }
 
@@ -109,7 +131,6 @@ public class UserController extends BaseController {
 
         httpSession.setAttribute("user", user);
         return super.redirect("/");
-
     }
 
 
