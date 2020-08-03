@@ -79,6 +79,8 @@ public class UserController extends BaseController {
     }
 
     @GetMapping("/login")
+    @PreAuthorize("isAnonymous()")
+    @PageTitle("Login")
     public String login(Model model) {
         if (!model.containsAttribute("userLoginBindingModel")) {
             model.addAttribute("userLoginBindingModel", new UserLoginBindingModel());
@@ -93,9 +95,8 @@ public class UserController extends BaseController {
                                HttpSession httpSession) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userLoginBindingModel"
-                    , bindingResult);
-            return super.redirect("/login");
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userLoginBindingModel", bindingResult);
+            return super.view("user/login");
         }
         //find user
         UserServiceModel user = this.userService.findByUsername(userLoginBindingModel.getUsername());
@@ -103,7 +104,7 @@ public class UserController extends BaseController {
         if (user == null || !user.getPassword().equals(userLoginBindingModel.getPassword())) {
             redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
             redirectAttributes.addFlashAttribute("notFound", true);
-            return super.redirect("/login");
+            return super.view("user/login");
         }
 
         httpSession.setAttribute("user", user);
