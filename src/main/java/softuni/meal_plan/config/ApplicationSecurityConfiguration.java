@@ -13,20 +13,20 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors().disable()
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/js/**", "/css/**", "/img/**").permitAll()
-                .antMatchers("/", "/users/register", "/users/login").anonymous()
+            .cors().disable()
+            .csrf().disable()
+            .authorizeRequests()
+                .antMatchers("/**", "/js/**", "/css/**", "/img/**").permitAll()
+                .antMatchers("/", "/users/register", "/users/login").permitAll()
                 .anyRequest().authenticated()
-                .and()
-                .formLogin()
+            .and()
+            .formLogin()
                 .loginPage("/users/login")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/home")
-                .and()
-                .logout()
+            .and()
+            .logout()
                 .logoutSuccessUrl("/");
     }
 }
