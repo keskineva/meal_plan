@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,13 +37,11 @@ public class UserController extends BaseController {
 
     private final UserService userService;
     private final ModelMapper modelMapper;
-    private final BCryptPasswordEncoder encoder;
 
     @Autowired
-    public UserController(UserService userService, ModelMapper modelMapper, BCryptPasswordEncoder encoder) {
+    public UserController(UserService userService, ModelMapper modelMapper) {
         this.userService = userService;
         this.modelMapper = modelMapper;
-        this.encoder = encoder;
     }
     @GetMapping("/register")
     @PreAuthorize("isAnonymous()")
@@ -74,15 +71,14 @@ public class UserController extends BaseController {
             return super.view("user/register");
         }
 
-        this.userService.registerUser(this.modelMapper
-                .map(userRegisterBindingModel, UserServiceModel.class));
-        return super.redirect("/login");
+        this.userService.registerUser(this.modelMapper.map(userRegisterBindingModel, UserServiceModel.class));
+        return super.redirect("login");
     }
 
     @GetMapping("/login")
     @PreAuthorize("isAnonymous()")
     @PageTitle("Login")
-    public String login(HttpServletRequest request, Model model) {
+    public String login(Model model) {
         if (!model.containsAttribute("userLoginBindingModel")) {
             model.addAttribute("userLoginBindingModel", new UserLoginBindingModel());
             model.addAttribute("notFound", false);
@@ -110,29 +106,6 @@ public class UserController extends BaseController {
         model.addAttribute("errorMessage", errorMessage);
         return "user/login";
     }
-
-    @PostMapping("/login")
-    public ModelAndView loginConfirm(@Valid @ModelAttribute("userLoginBindingModel") UserLoginBindingModel userLoginBindingModel,
-                               BindingResult bindingResult, RedirectAttributes redirectAttributes,
-                               HttpSession httpSession) {
-        if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userLoginBindingModel", bindingResult);
-            return super.view("user/login");
-        }
-        //find user
-        UserServiceModel user = this.userService.findByUsername(userLoginBindingModel.getUsername());
-
-        if (user == null || !user.getPassword().equals(userLoginBindingModel.getPassword())) {
-            redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
-            redirectAttributes.addFlashAttribute("notFound", true);
-            return super.view("user/login");
-        }
-
-        httpSession.setAttribute("user", user);
-        return super.redirect("/");
-    }
-
 
     @GetMapping("/profile")
     @PreAuthorize("isAuthenticated()")
