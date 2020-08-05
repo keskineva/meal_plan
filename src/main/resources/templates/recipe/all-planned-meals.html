@@ -14,23 +14,32 @@
         <h1 class="text-center bold font-weight-bold text-dark">All planned meals</h1>
         <hr class="hr-2 bg-dark">
 
-        <table class="table table-hover w-75 mx-auto">
+        <table class="table table-hover w-75 mx-auto" id="plannedMeals">
             <thead>
             <tr class="row mx-auto">
-                <th class="col-md-1 text-center">#</th>
-                <th class="col-md-3 text-center">Recipe Image</th>
-                <th class="col-md-3 text-center">Recipe Name</th>
-                <th class="col-md-3 text-center">Recipe Date</th>
+                <th scope="col" class="col-md-1 text-center">#</th>
+                <th scope="col" class="col-md-3 text-center">Recipe Image</th>
+                <th scope="col" class="col-md-3 text-center">Recipe Name</th>
+                <th scope="col" class="col-md-1 text-center">Portions</th>
+                <th scope="col" class="col-md-2 text-center">Date</th>
+                <th scope="col" class="col-md-1 text-center">Type</th>
             </tr>
             </thead>
             <tbody>
-            <tr class="row mx-auto" th:each="plannedMeals, iter : *{plannedMeals}">
+            <tr scope="row" class="row mx-auto" th:each="plannedMeals, iter : *{plannedMeals}">
                 <td class="col-md-1 text-center" th:utext="${iter.index + 1}"></td>
                 <td class="col-md-3 text-center">
                     <img width="200" height="200" src="/img/recipeImage.png">
                 </td>
                 <td class="col-md-3 text-center" th:utext="${plannedMeals.recipe.name}"></td>
-                <td class="col-md-3 text-center" th:utext="${plannedMeals.plannedDateTime}"></td>
+                <td class="col-md-1 text-center" th:utext="${plannedMeals.plannedPortionsCount}"></td>
+                <td class="col-md-2 text-center">
+                    <span class="internalDateTime" th:text="${plannedMeals.plannedDateTime}" hidden></span>
+                    <span class="publicDate"></span>
+                </td>
+                <td class="col-md-1 text-center">
+                    <span class="publicMealType"></span>
+                </td>
                 <td class="button-holder mt-3 d-flex justify-content-center">
                     <form method="post">
                         <input hidden th:value="${plannedMeals.id}" th:name="plannedMealId">
@@ -53,5 +62,6 @@
 <footer>
     <th:block th:include="~{fragments/footer}"></th:block>
 </footer>
+<script src="/js/parsePrivateDateTime.js"></script>
 </body>
 </html>
