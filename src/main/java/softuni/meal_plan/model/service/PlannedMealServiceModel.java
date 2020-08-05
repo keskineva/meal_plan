@@ -5,8 +5,6 @@ import javax.validation.constraints.FutureOrPresent;
 import java.util.Date;
 
 public class PlannedMealServiceModel extends BaseServiceModel {
-
-
     private int plannedPortionsCount;
     private Date plannedDateTime;
     private UserServiceModel user;
