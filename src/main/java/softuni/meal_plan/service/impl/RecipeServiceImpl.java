@@ -5,12 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import softuni.meal_plan.error.RecipeNotFoundException;
 import softuni.meal_plan.model.entity.Recipe;
 import softuni.meal_plan.model.service.RecipeServiceModel;
-import softuni.meal_plan.repository.IngredientRepository;
-import softuni.meal_plan.repository.RecipeRepository;
-import softuni.meal_plan.repository.UserRepository;
+import softuni.meal_plan.repository.*;
 import softuni.meal_plan.service.RecipeService;
 
 import java.util.List;
@@ -23,13 +22,17 @@ public class RecipeServiceImpl implements RecipeService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final IngredientRepository ingredientRepository;
+    private final PlannedMealRepository plannedMealRepository;
+    private final RecipeIngredientRepository recipeIngredientRepository;
 
     @Autowired
-    public RecipeServiceImpl(RecipeRepository recipeRepository, UserRepository userRepository, IngredientRepository ingredientRepository, ModelMapper modelMapper) {
+    public RecipeServiceImpl(RecipeRepository recipeRepository, UserRepository userRepository, IngredientRepository ingredientRepository, ModelMapper modelMapper, PlannedMealRepository plannedMealRepository, RecipeIngredientRepository recipeIngredientRepository) {
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;
         this.ingredientRepository = ingredientRepository;
         this.modelMapper = modelMapper;
+        this.plannedMealRepository = plannedMealRepository;
+        this.recipeIngredientRepository = recipeIngredientRepository;
     }
 
     @Override
@@ -56,10 +59,12 @@ public class RecipeServiceImpl implements RecipeService {
                 .orElse(null);
     }
 
+    @Transactional
     @Override
     public void deleteRecipe(String id) {
         Recipe recipe = this.recipeRepository.findById(id).orElseThrow(() -> new RecipeNotFoundException("Recipe with given id was not found!"));
-
+        this.plannedMealRepository.deletePlannedMealsByRecipe_Id(id);
+        this.recipeIngredientRepository.deleteRecipeIngredientsByRecipe_Id(id);
         this.recipeRepository.delete(recipe);
     }
 }

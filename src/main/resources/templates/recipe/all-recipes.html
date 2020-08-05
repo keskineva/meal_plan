@@ -76,6 +76,9 @@
                                 </div>
                                 <br />
                                 <button type="submit" name="addToPlan" class="btn bg-hero glow-button">Add to Plan</button>
+                                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                                <a class="btn bg-hero glow-button" th:href="@{/recipes/delete/{id}(id=${recipes.id})}">Delete</a>
+                                </th:block>
                                 <div class="addToPlanResult alert alert-success" role="alert" hidden></div>
                                 <div class="addToPlanResultErr alert alert-danger" role="alert" hidden></div>
                             </form>

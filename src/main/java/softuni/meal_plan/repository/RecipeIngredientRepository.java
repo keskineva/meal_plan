@@ -6,4 +6,5 @@ import softuni.meal_plan.model.entity.RecipeIngredient;
 
 @Repository
 public interface RecipeIngredientRepository extends JpaRepository<RecipeIngredient, String> {
+    void deleteRecipeIngredientsByRecipe_Id(String recipeId);
 }
