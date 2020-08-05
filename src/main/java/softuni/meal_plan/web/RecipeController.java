@@ -15,12 +15,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import softuni.meal_plan.error.Constants;
 import softuni.meal_plan.model.binding.RecipeAddBindingModel;
 import softuni.meal_plan.model.binding.RecipeShowBindingModel;
-import softuni.meal_plan.model.entity.User;
 import softuni.meal_plan.model.service.*;
-import softuni.meal_plan.service.IngredientService;
-import softuni.meal_plan.service.PlannedMealService;
-import softuni.meal_plan.service.RecipeIngredientService;
-import softuni.meal_plan.service.RecipeService;
+import softuni.meal_plan.service.*;
 import softuni.meal_plan.web.annotations.PageFavicon;
 import softuni.meal_plan.web.annotations.PageTitle;
 
@@ -40,7 +36,6 @@ import java.util.stream.Collectors;
 public class RecipeController extends BaseController {
 
     public static enum MealType {
-
         BREAKFAST("BREAKFAST"),
         LUNCH("LUNCH"),
         DINNER("DINNER"),
@@ -60,24 +55,23 @@ public class RecipeController extends BaseController {
         public String toString() {
             return this.getType();
         }
-
     }
-
 
     private final ModelMapper modelMapper;
     private final RecipeService recipeService;
     private final IngredientService ingredientService;
     private final PlannedMealService plannedMealService;
     private final RecipeIngredientService recipeIngredientService;
-
+    private final UserService userService;
 
     @Autowired
-    public RecipeController(ModelMapper modelMapper, RecipeService recipeService, IngredientService ingredientService, PlannedMealService plannedMealService, RecipeIngredientService recipeIngredientService) {
+    public RecipeController(ModelMapper modelMapper, RecipeService recipeService, IngredientService ingredientService, PlannedMealService plannedMealService, RecipeIngredientService recipeIngredientService, UserService userService) {
         this.modelMapper = modelMapper;
         this.recipeService = recipeService;
         this.ingredientService = ingredientService;
         this.plannedMealService = plannedMealService;
         this.recipeIngredientService = recipeIngredientService;
+        this.userService = userService;
     }
 
     @PageFavicon("https://www.freepngimg.com/download/grocery/41636-2-groceries-png-image-high-quality.png")
@@ -100,8 +94,7 @@ public class RecipeController extends BaseController {
         return modelAndView;
     }
 
-//adding recipe
-
+    //adding recipe
     @GetMapping("/add")
     @PreAuthorize("isAuthenticated()")
     @PageTitle("Add Recipe")
@@ -231,10 +224,10 @@ public class RecipeController extends BaseController {
         plannedMealServiceModel.setPlannedDateTime(mealDateTime);
         plannedMealServiceModel.setRecipe(recipeService.findRecipeById(recipeId));
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) auth.getPrincipal();
-        plannedMealServiceModel.setUser(this.modelMapper.map(user, UserServiceModel.class));
+        String username = auth.getName();
+        UserServiceModel userServiceModel = userService.findUserByUserName(username);
+        plannedMealServiceModel.setUser(userServiceModel);
         this.plannedMealService.addMealToPlan(plannedMealServiceModel);
-
         return "OK. Added.";
     }
 
