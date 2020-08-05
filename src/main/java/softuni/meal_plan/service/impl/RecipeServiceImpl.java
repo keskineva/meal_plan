@@ -2,8 +2,6 @@ package softuni.meal_plan.service.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import softuni.meal_plan.error.RecipeNotFoundException;
@@ -38,9 +36,6 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public RecipeServiceModel addRecipe(RecipeServiceModel recipeServiceModel) {
         Recipe recipe = this.modelMapper.map(recipeServiceModel, Recipe.class);
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        //recipe.setAuthor((User)auth.getPrincipal()); //TODO
         return this.modelMapper.map(this.recipeRepository.saveAndFlush(recipe), RecipeServiceModel.class);
     }
 

@@ -120,8 +120,13 @@ public class RecipeController extends BaseController {
             modelAndView.setViewName("redirect:/recipes/add");
             return modelAndView;
         } else {
+            // 0. get current user
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String username = auth.getName();
+            UserServiceModel userServiceModel = userService.findUserByUserName(username);
             // 1.save in recipe table
             RecipeServiceModel recipeServiceModel = this.modelMapper.map(recipeAddBindingModel, RecipeServiceModel.class);
+            recipeServiceModel.setAuthor(userServiceModel);
             recipeServiceModel = this.recipeService.addRecipe(recipeServiceModel);
 
             // 2. save in ingredients table

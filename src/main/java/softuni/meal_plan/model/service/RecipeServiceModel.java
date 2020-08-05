@@ -1,7 +1,6 @@
 package softuni.meal_plan.model.service;
 
 import org.hibernate.validator.constraints.Length;
-import softuni.meal_plan.model.entity.User;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
@@ -12,7 +11,7 @@ public class RecipeServiceModel extends BaseServiceModel {
     private byte[] image;
     private String instructions;
     private int portionsCount;
-    private User author;
+    private UserServiceModel author;
     private List<IngredientServiceModel> ingredients;
 
     @Length(min = 2, message = "Recipe name length must be more than two characters")
@@ -51,11 +50,11 @@ public class RecipeServiceModel extends BaseServiceModel {
         this.portionsCount = portionsCount;
     }
 
-    public User getAuthor() {
+    public UserServiceModel getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(UserServiceModel author) {
         this.author = author;
     }
 
