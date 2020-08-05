@@ -13,21 +13,22 @@
         <span style="visibility: hidden">....</span>
         <h1 class="text-center bold font-weight-bold text-dark">Create Order</h1>
         <hr class="hr-2 bg-dark">
-        <table class="table table-hover w-75 mx-auto" id="CreateOrder">
-            <thead>
-            <tr class="row mx-auto">
-                <th class="col-md-3 text-center">Ingredient</th>
-                <th class="col-md-3 text-center">Amount</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr class="row mx-auto" th:each="element : ${totalIngredientsAndAmountsMap}">
-                <td th:text="${element.key}">key</td>
-                <td th:text="${element.value}">value</td>
-                <td class="button-holder mt-3 d-flex justify-content-center"></td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive-lg">
+            <table class="table mx-auto" id="CreateOrder">
+                <thead class="thead-light">
+                    <tr class="row mx-auto">
+                        <th scope="col" class="col-md-3 text-center">Ingredient</th>
+                        <th scope="col" class="col-md-5 text-center">Amount (gram or count)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr scope="row" class="row mx-auto" th:each="element : ${totalIngredientsAndAmountsMap}">
+                        <td class="col-md-3 text-center" th:text="${element.key}">key</td>
+                        <td class="col-md-5 text-center" th:text="${element.value}">value</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <form>
             <input type="radio" id="ebag" name="supplier" value="ebag">
