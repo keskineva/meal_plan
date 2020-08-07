@@ -157,4 +157,11 @@ public class UserServiceImpl implements UserService {
                 .map(user -> this.modelMapper.map(user, UserServiceModel.class))
                 .orElse(null);
     }
+
+    @Override
+    public UserServiceModel findUserByEmail(String email) {
+        return this.userRepository.findUserByEmail(email)
+                .map(user -> this.modelMapper.map(user, UserServiceModel.class))
+                .orElse(null);
+    }
 }

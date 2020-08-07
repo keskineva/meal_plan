@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -58,22 +59,41 @@ public class UserController extends BaseController {
     //@ModelAttribute //this is mapping the fields automatically
     //BindingResult should be always after the modelatrribute that it is validating
     //RedirectAttributes for when we need to redirect
-    public ModelAndView registerConfirm(@Valid @ModelAttribute("userRegisterBindingModel") UserRegisterBindingModel userRegisterBindingModel,
+    public String registerConfirm(@Valid @ModelAttribute("userRegisterBindingModel") UserRegisterBindingModel userRegisterBindingModel,
                                   BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         //in the context of this controller we redirect to the register page.
-        if (bindingResult.hasErrors()
-                || !userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getConfirmPassword())) {
+        if (bindingResult.hasErrors()) {
+            return "user/register";
+        }
 
+        if (!userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getConfirmPassword())) {
+            bindingResult.rejectValue("confirmPassword", "registerPasswordsNotEquals", "Passwords are not equals!");
+            return "user/register";
+        }
 
-            redirectAttributes.addFlashAttribute("userRegisterBindingModel", userRegisterBindingModel);
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userRegisterBindingModel",
-                    bindingResult);
-            return super.view("user/register");
+        try {
+            UserServiceModel userExists = this.userService.findUserByEmail(userRegisterBindingModel.getEmail());
+            if (null != userExists) {
+                bindingResult.rejectValue("email", "registerEmailAlreadyExists", "Email already taken!");
+                return "user/register";
+            }
+        } catch (UsernameNotFoundException e) {
+            // email is free, no worries, proceed!
+        }
+
+        try {
+            UserServiceModel userExists = this.userService.findUserByUserName(userRegisterBindingModel.getUsername());
+            if (null != userExists) {
+                bindingResult.rejectValue("username", "registerUsernameAlreadyExists", "Username already taken!");
+                return "user/register";
+            }
+        } catch (UsernameNotFoundException e) {
+            // username is free, no worries, proceed!
         }
 
         this.userService.registerUser(this.modelMapper.map(userRegisterBindingModel, UserServiceModel.class));
-        return super.redirect("login");
+        return "redirect:login";
     }
 
     @GetMapping("/login")
