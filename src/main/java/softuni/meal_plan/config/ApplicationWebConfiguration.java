@@ -3,6 +3,7 @@ package softuni.meal_plan.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -10,6 +11,7 @@ import softuni.meal_plan.web.interceptors.FaviconInterceptor;
 import softuni.meal_plan.web.interceptors.TitleInterceptor;
 
 @EnableScheduling
+@EnableAsync
 @Configuration
 public class ApplicationWebConfiguration implements WebMvcConfigurer {
     private final TitleInterceptor interceptor;

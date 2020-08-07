@@ -28,13 +28,14 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/recipes")
 @Validated
 public class RecipeController extends BaseController {
-
+    private final Logger logger = Logger.getLogger(RecipeController.class.getName());
     public static enum MealType {
         BREAKFAST("BREAKFAST"),
         LUNCH("LUNCH"),
@@ -189,8 +190,8 @@ public class RecipeController extends BaseController {
     @PostMapping("/delete/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView deleteRecipeConfirm(@PathVariable String id) {
+        logger.info("Going to execute a method asynchronously. On thread: " + Thread.currentThread().getName());
         this.recipeService.deleteRecipe(id);
-
         return super.redirect("/recipes/all");
     }
 

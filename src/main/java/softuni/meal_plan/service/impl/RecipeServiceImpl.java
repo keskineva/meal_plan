@@ -2,6 +2,7 @@ package softuni.meal_plan.service.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import softuni.meal_plan.error.RecipeNotFoundException;
@@ -11,10 +12,12 @@ import softuni.meal_plan.repository.*;
 import softuni.meal_plan.service.RecipeService;
 
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
+    private final Logger logger = Logger.getLogger(RecipeServiceImpl.class.getName());
 
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
@@ -54,9 +57,11 @@ public class RecipeServiceImpl implements RecipeService {
                 .orElse(null);
     }
 
+    @Async
     @Transactional
     @Override
     public void deleteRecipe(String id) {
+        logger.info("Execute method asynchronously. On thread: " + Thread.currentThread().getName());
         Recipe recipe = this.recipeRepository.findById(id).orElseThrow(() -> new RecipeNotFoundException("Recipe with given id was not found!"));
         this.plannedMealRepository.deletePlannedMealsByRecipe_Id(id);
         this.recipeIngredientRepository.deleteRecipeIngredientsByRecipe_Id(id);
