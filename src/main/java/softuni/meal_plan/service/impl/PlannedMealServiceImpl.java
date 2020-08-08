@@ -60,7 +60,7 @@ public class PlannedMealServiceImpl implements PlannedMealService {
             username = principal.toString();
         }
 
-        return this.plannedMealRepository.findPlannedMealsByUser_Username(username)
+        return this.plannedMealRepository.findPlannedMealsByUser_Username_OrderByPlannedDateTimeAsc(username)
                 .stream()
                 .map(r -> this.modelMapper.map(r, PlannedMealServiceModel.class))
                 .collect(Collectors.toList());

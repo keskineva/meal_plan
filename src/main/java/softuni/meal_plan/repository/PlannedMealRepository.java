@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface PlannedMealRepository extends JpaRepository<PlannedMeal, String> {
-  List<PlannedMeal> findPlannedMealsByUser_Username(String username);
+  List<PlannedMeal> findPlannedMealsByUser_Username_OrderByPlannedDateTimeAsc(String username);
   void deletePlannedMealsByRecipe_Id(String recipeId);
 }
