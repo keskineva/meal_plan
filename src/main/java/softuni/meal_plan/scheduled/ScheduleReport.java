@@ -17,6 +17,10 @@ public class ScheduleReport {
     @Autowired
     private RecipeService recipeService;
 
+    public void setRecipeService(RecipeService recipeService) {
+        this.recipeService = recipeService;
+    }
+
     // seconds minutes hours days months year
     // http://www.cronmaker.com/
     @Scheduled(cron="*/30 * * * * ?")
