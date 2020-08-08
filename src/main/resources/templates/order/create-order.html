@@ -17,6 +17,11 @@
             <form method="get" th:action="@{/orders/shoppingList}">
                 <button type="submit" name="shoppingList" class="btn btn-secondary btn-sm">Download Shopping List</button>
             </form>
+            <br />
+            <form method="get" th:action="@{/orders/recipePlanList}">
+                <button type="submit" name="recipePlanList" class="btn btn-secondary btn-sm">Download Full Recipe Plan List</button>
+            </form>
+            <br />
             <form>
                 <input type="radio" id="ebag" name="supplier" value="ebag" disabled>
                 <label for="ebag">Ebag</label><br>

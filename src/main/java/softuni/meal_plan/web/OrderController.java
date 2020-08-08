@@ -86,7 +86,7 @@ public class OrderController extends BaseController {
     @GetMapping(value = "/shoppingList")
     @PreAuthorize("isAuthenticated()")
     public void generateShoppingListTxt(HttpServletResponse response) {
-        String [] header = { "Bought?", "Ingredient", "Amount in grams or count" };
+        String[] header = {"Bought?", "Ingredient", "Amount in grams or count"};
         Map<String, Integer> totalIngredientsAndAmountsMap = getTotalIngredientsMap();
         String[][] data = mapToMatrix(totalIngredientsAndAmountsMap);
         String table = ASCIITable.getInstance().getTable(header, data);
@@ -105,12 +105,72 @@ public class OrderController extends BaseController {
         }
     }
 
+    @GetMapping(value = "/recipePlanList")
+    @PreAuthorize("isAuthenticated()")
+    public void generateRecipePlanListTxt(HttpServletResponse response) {
+        String[] header = {"Bought?", "Ingredient", "Amount in grams or count"};
+        Map<String, Integer> totalIngredientsAndAmountsMap = getTotalIngredientsMap();
+        String[][] data = mapToMatrix(totalIngredientsAndAmountsMap);
+        String table = ASCIITable.getInstance().getTable(header, data);
+        // recipes list
+        List<PlannedMealServiceModel> allPlannedMeals = plannedMealService.findAllPlannedMealsByUsername();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Shopping List\n");
+        stringBuilder.append(table);
+        stringBuilder.append("\n\n");
+        stringBuilder.append("Complete Meal Plan\n");
+        Date lastDatePrinted = null;
+        for (PlannedMealServiceModel onePlannedMeal : allPlannedMeals) {
+            Date currentDate = onePlannedMeal.getPlannedDateTime();
+            if (lastDatePrinted == null || currentDate.compareTo(lastDatePrinted) != 0) {
+                stringBuilder.append("|--------------------------------------------\n");
+                stringBuilder.append("|--------- ").append(currentDate).append("\n");
+                lastDatePrinted = currentDate;
+            }
+            // todo add breakfast / lunch
+            stringBuilder.append("|--------------------------------------------\n");
+            stringBuilder.append("|").append(onePlannedMeal.getRecipe().getName()).append("\n");
+            stringBuilder.append("|").append(onePlannedMeal.getRecipe().getInstructions()).append("\n");
+            stringBuilder.append("|Products for ").append(onePlannedMeal.getPlannedPortionsCount()).append(" portions:\n");
+
+            String recipeId = onePlannedMeal.getRecipe().getId();
+            //4. recipe_ingredients -> ingredients and amounts
+            List<RecipeIngredientServiceModel> ingredientsAmounts =
+                    recipeIngredientService.findIngredientsAndAmounts(recipeId);
+
+            String[] recipeHeader = {"Ingredient", "Amount in grams or count"};
+            String[][] recipeIngredientsData = new String[ingredientsAmounts.size()][];
+            int index = 0;
+            for (RecipeIngredientServiceModel ingredientAmount : ingredientsAmounts) {
+                String ingredientName = ingredientAmount.getIngredient().getName();
+                int totalAmountNeeded = (ingredientAmount.getAmount() / onePlannedMeal.getRecipe().getPortionsCount()) * onePlannedMeal.getPlannedPortionsCount();
+                recipeIngredientsData[index] = new String[] {ingredientName, "" + totalAmountNeeded};
+                index++;
+            }
+            String recipeIngredientsTable = ASCIITable.getInstance().getTable(recipeHeader, recipeIngredientsData);
+            stringBuilder.append(recipeIngredientsTable).append("\n");
+        }
+
+        try {
+            // get your file as InputStream
+            InputStream is = new ByteArrayInputStream(stringBuilder.toString().getBytes());
+            // copy it to response's OutputStream
+            org.apache.commons.io.IOUtils.copy(is, response.getOutputStream());
+            response.setContentType("text/plain");
+            response.addHeader("Content-Disposition", String.format("attachment; filename=RecipePlanList_%s.txt", new Date()));
+            response.flushBuffer();
+        } catch (IOException ex) {
+            logger.info("Error writing file to output stream: " + ex.getMessage());
+            throw new RuntimeException("IOError writing file to output stream");
+        }
+    }
+
     private String[][] mapToMatrix(Map<String, Integer> totalIngredientsAndAmountsMap) {
         String[][] data = {};
         data = new String[totalIngredientsAndAmountsMap.size()][];
         int index = 0;
         for (Map.Entry<String, Integer> oneIngredientPair : totalIngredientsAndAmountsMap.entrySet()) {
-            data[index] = new String[] {"[ ]", oneIngredientPair.getKey(), oneIngredientPair.getValue().toString()};
+            data[index] = new String[]{"[ ]", oneIngredientPair.getKey(), oneIngredientPair.getValue().toString()};
             index++;
         }
         return data;

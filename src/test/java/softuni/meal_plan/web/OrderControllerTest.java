@@ -50,4 +50,12 @@ class OrderControllerTest {
                     .with(user("ava").password("1234").roles("USER")))
                 .andExpect(status().is(200));
     }
+
+    @Test
+    void generateRecipePlanListTxt() throws Exception {
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/orders/recipePlanList")
+                        .with(user("ava").password("1234").roles("USER")))
+                .andExpect(status().is(200));
+    }
 }
