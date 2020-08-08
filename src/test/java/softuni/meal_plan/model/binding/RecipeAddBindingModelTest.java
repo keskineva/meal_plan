@@ -12,4 +12,9 @@ class RecipeAddBindingModelTest {
     public void testRecipeAddBindingModel_Parameters() throws Exception {
         assertThat(RecipeAddBindingModel.class, allOf(hasValidBeanConstructor(), hasValidGettersAndSetters()));
     }
+
+    @Test
+    public void testRecipeAddBindingModel_Row_Parameters() throws Exception {
+        assertThat(RecipeAddBindingModel.Row.class, allOf(hasValidBeanConstructor(), hasValidGettersAndSetters()));
+    }
 }
