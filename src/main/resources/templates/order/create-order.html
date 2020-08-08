@@ -13,6 +13,23 @@
         <span style="visibility: hidden">....</span>
         <h1 class="text-center bold font-weight-bold text-dark">Create Order</h1>
         <hr class="hr-2 bg-dark">
+        <div>
+            <form method="get" th:action="@{/orders/shoppingList}">
+                <button type="submit" name="shoppingList" class="btn btn-secondary btn-sm">Download Shopping List</button>
+            </form>
+            <form>
+                <input type="radio" id="ebag" name="supplier" value="ebag" disabled>
+                <label for="ebag">Ebag</label><br>
+                <input type="radio" id="supermag" name="supplier" value="supermag" disabled>
+                <label for="supermag">Supermag</label><br>
+                <div>
+                    <form method="get" th:action="@{/orders/buy}">
+                        <button type="submit" name="buy" class="btn btn-secondary btn-sm" disabled>Buy</button>
+                    </form>
+                </div>
+            </form>
+        </div>
+        <hr class="hr-2 bg-dark">
         <div class="table-responsive-lg">
             <table class="table mx-auto" id="CreateOrder">
                 <thead class="thead-light">
@@ -29,25 +46,9 @@
                 </tbody>
             </table>
         </div>
-
-        <form>
-            <input type="radio" id="ebag" name="supplier" value="ebag">
-            <label for="ebag">Ebag</label><br>
-            <input type="radio" id="supermag" name="supplier" value="supermag">
-            <label for="supermag">Supermag</label><br>
-            <div>
-                <form method="get" th:action="@{/orders/buy}">
-                    <button type="submit" name="buy" class="btn btn-secondary btn-sm">Buy</button>
-                </form>
-            </div>
-            <div>
-                <form method="get" th:action="@{/orders/shoppingList}">
-                    <button type="submit" name="shoppingList" class="btn btn-secondary btn-sm">Download Shopping List in
-                        PDF
-                    </button>
-                </form>
-            </div>
-        </form>
+        <br />
+        <br />
+        <br />
         <span style="visibility: hidden">....</span>
 
     </main>

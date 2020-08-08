@@ -42,4 +42,12 @@ class OrderControllerTest {
                 .andExpect(view().name("order/create-order"))
                 .andDo(MockMvcResultHandlers.print());
     }
+
+    @Test
+    void generateShoppingListTxt() throws Exception {
+        this.mockMvc
+            .perform(MockMvcRequestBuilders.get("/orders/shoppingList")
+                    .with(user("ava").password("1234").roles("USER")))
+                .andExpect(status().is(200));
+    }
 }

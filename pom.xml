@@ -18,6 +18,13 @@
         <java.version>11</java.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>otto-group</id>
+            <url>	https://dl.bintray.com/ottogroup/maven/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -120,6 +127,16 @@
             <artifactId>bean-matchers</artifactId>
             <version>0.12</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>ascii-table</groupId>
+            <artifactId>ascii-table</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 
