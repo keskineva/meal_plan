@@ -30,7 +30,7 @@ class RecipeControllerTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/recipes/show")
                         .with(user("ava").password("1234").roles("USER"))
-                .param("id", "1d39db7c-a9ae-47e4-b214-953aa54ca118"))
+                .param("id", "1d383a6a-7d04-4c6a-9f68-e76629cdc037"))
                 .andExpect(status().is(200))
                 .andExpect(view().name("recipe/show-recipe"))
                 .andDo(MockMvcResultHandlers.print());
@@ -62,7 +62,7 @@ class RecipeControllerTest {
     @Test
     void deleteRecipe() throws Exception {
         this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/recipes/delete/1d39db7c-a9ae-47e4-b214-953aa54ca118")
+                .perform(MockMvcRequestBuilders.get("/recipes/delete/1d383a6a-7d04-4c6a-9f68-e76629cdc037")
                         .with(user("ava").password("1234").roles("ADMIN"))
                 )
                 .andExpect(status().is(200))
@@ -96,7 +96,7 @@ class RecipeControllerTest {
                     .with(user("ava").password("1234").roles("USER"))
                     .param("addToPlan", "")
                     .param("portions_count", "2")
-                    .param("recipe_id", "1d39db7c-a9ae-47e4-b214-953aa54ca118")
+                    .param("recipe_id", "1d383a6a-7d04-4c6a-9f68-e76629cdc037")
                     .param("planned_date", sdf.format(c.getTime())) // get formatted date
                     .param("meal_type", "LUNCH")
                 )
