@@ -86,10 +86,7 @@ public class OrderController extends BaseController {
     @GetMapping(value = "/shoppingList")
     @PreAuthorize("isAuthenticated()")
     public void generateShoppingListTxt(HttpServletResponse response) {
-        String[] header = {"Bought?", "Ingredient", "Amount in grams or count"};
-        Map<String, Integer> totalIngredientsAndAmountsMap = getTotalIngredientsMap();
-        String[][] data = mapToMatrix(totalIngredientsAndAmountsMap);
-        String table = ASCIITable.getInstance().getTable(header, data);
+        String table = getShoppingListOnly();
 
         try {
             // get your file as InputStream
@@ -105,13 +102,34 @@ public class OrderController extends BaseController {
         }
     }
 
-    @GetMapping(value = "/recipePlanList")
-    @PreAuthorize("isAuthenticated()")
-    public void generateRecipePlanListTxt(HttpServletResponse response) {
+    private String getShoppingListOnly() {
         String[] header = {"Bought?", "Ingredient", "Amount in grams or count"};
         Map<String, Integer> totalIngredientsAndAmountsMap = getTotalIngredientsMap();
         String[][] data = mapToMatrix(totalIngredientsAndAmountsMap);
-        String table = ASCIITable.getInstance().getTable(header, data);
+        return ASCIITable.getInstance().getTable(header, data);
+    }
+
+    @GetMapping(value = "/recipePlanList")
+    @PreAuthorize("isAuthenticated()")
+    public void generateRecipePlanListTxt(HttpServletResponse response) {
+        StringBuilder stringBuilder = getCompleteMealPlan();
+
+        try {
+            // get your file as InputStream
+            InputStream is = new ByteArrayInputStream(stringBuilder.toString().getBytes());
+            // copy it to response's OutputStream
+            org.apache.commons.io.IOUtils.copy(is, response.getOutputStream());
+            response.setContentType("text/plain");
+            response.addHeader("Content-Disposition", String.format("attachment; filename=RecipePlanList_%s.txt", new Date()));
+            response.flushBuffer();
+        } catch (IOException ex) {
+            logger.info("Error writing file to output stream: " + ex.getMessage());
+            throw new RuntimeException("IOError writing file to output stream");
+        }
+    }
+
+    private StringBuilder getCompleteMealPlan() {
+        String table = getShoppingListOnly();
         // recipes list
         List<PlannedMealServiceModel> allPlannedMeals = plannedMealService.findAllPlannedMealsByUsername();
         StringBuilder stringBuilder = new StringBuilder();
@@ -150,19 +168,7 @@ public class OrderController extends BaseController {
             stringBuilder.append(recipeIngredientsTable);
             stringBuilder.append(onePlannedMeal.getRecipe().getInstructions()).append("\n\n");
         }
-
-        try {
-            // get your file as InputStream
-            InputStream is = new ByteArrayInputStream(stringBuilder.toString().getBytes());
-            // copy it to response's OutputStream
-            org.apache.commons.io.IOUtils.copy(is, response.getOutputStream());
-            response.setContentType("text/plain");
-            response.addHeader("Content-Disposition", String.format("attachment; filename=RecipePlanList_%s.txt", new Date()));
-            response.flushBuffer();
-        } catch (IOException ex) {
-            logger.info("Error writing file to output stream: " + ex.getMessage());
-            throw new RuntimeException("IOError writing file to output stream");
-        }
+        return stringBuilder;
     }
 
     private String[][] mapToMatrix(Map<String, Integer> totalIngredientsAndAmountsMap) {
