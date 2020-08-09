@@ -59,8 +59,8 @@ public class OrderController extends BaseController {
         Map<String, Integer> totalIngredientsAndAmountsMap = new LinkedHashMap<>();
         //2. foreach plannedmeal: plannedmeal.portions*
         for (PlannedMealServiceModel onePlannedMeal : allPlannedMeals) {
-            int desiredPortions = onePlannedMeal.getPlannedPortionsCount();
-            int portionsInOneRecipe = onePlannedMeal.getRecipe().getPortionsCount();
+            double desiredPortions = onePlannedMeal.getPlannedPortionsCount();
+            double portionsInOneRecipe = onePlannedMeal.getRecipe().getPortionsCount();
             //3. planned meal.recipe
             String recipeId = onePlannedMeal.getRecipe().getId();
             //4. recipe_ingredients -> ingredients and amounts
@@ -69,13 +69,13 @@ public class OrderController extends BaseController {
 
             for (RecipeIngredientServiceModel ingredientAmount : ingredientsAmounts) {
                 String ingredientName = ingredientAmount.getIngredient().getName();
-                int totalAmountNeeded = (ingredientAmount.getAmount() / portionsInOneRecipe) * desiredPortions;
+                double totalAmountNeeded = ((double) ingredientAmount.getAmount() / portionsInOneRecipe) * desiredPortions;
                 //add to Map
                 if (totalIngredientsAndAmountsMap.containsKey(ingredientName)) {
                     int oldAmount = totalIngredientsAndAmountsMap.get(ingredientName);
-                    totalIngredientsAndAmountsMap.replace(ingredientName, oldAmount + totalAmountNeeded);
+                    totalIngredientsAndAmountsMap.replace(ingredientName, (int) Math.ceil(oldAmount + totalAmountNeeded));
                 } else {
-                    totalIngredientsAndAmountsMap.put(ingredientName, totalAmountNeeded);
+                    totalIngredientsAndAmountsMap.put(ingredientName, (int) Math.ceil(totalAmountNeeded));
                 }
             }
 
@@ -130,7 +130,6 @@ public class OrderController extends BaseController {
             // todo add breakfast / lunch
             stringBuilder.append("|--------------------------------------------\n");
             stringBuilder.append("|").append(onePlannedMeal.getRecipe().getName()).append("\n");
-            stringBuilder.append("|").append(onePlannedMeal.getRecipe().getInstructions()).append("\n");
             stringBuilder.append("|Products for ").append(onePlannedMeal.getPlannedPortionsCount()).append(" portions:\n");
 
             String recipeId = onePlannedMeal.getRecipe().getId();
@@ -143,12 +142,13 @@ public class OrderController extends BaseController {
             int index = 0;
             for (RecipeIngredientServiceModel ingredientAmount : ingredientsAmounts) {
                 String ingredientName = ingredientAmount.getIngredient().getName();
-                int totalAmountNeeded = (ingredientAmount.getAmount() / onePlannedMeal.getRecipe().getPortionsCount()) * onePlannedMeal.getPlannedPortionsCount();
-                recipeIngredientsData[index] = new String[] {ingredientName, "" + totalAmountNeeded};
+                double totalAmountNeeded = ((double) ingredientAmount.getAmount() / (double) onePlannedMeal.getRecipe().getPortionsCount()) * (double) onePlannedMeal.getPlannedPortionsCount();
+                recipeIngredientsData[index] = new String[]{ingredientName, "" + (int)Math.ceil(totalAmountNeeded)};
                 index++;
             }
             String recipeIngredientsTable = ASCIITable.getInstance().getTable(recipeHeader, recipeIngredientsData);
-            stringBuilder.append(recipeIngredientsTable).append("\n");
+            stringBuilder.append(recipeIngredientsTable);
+            stringBuilder.append(onePlannedMeal.getRecipe().getInstructions()).append("\n\n");
         }
 
         try {
